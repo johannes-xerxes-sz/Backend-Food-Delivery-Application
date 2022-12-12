@@ -6,3 +6,4 @@ npm i body-parser dotenv express morgan
 npm i axios bcryptjs body-parser cors dotenv  
 
 npm i -D nodemon aws-sdk jest
+npm i stripe uuid 

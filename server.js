@@ -4,10 +4,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const logger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error');
-// const artist = require('./routes/artist');
-// const song = require('./routes/song');
+// const restaurant = require('./routes/restaurant');
+// const menu = require('./routes/menu');
 const user = require('./routes/user');
 const connectDB = require('./config/db');
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY
 
 
 dotenv.config({ path: './config/config.env' });
@@ -27,8 +29,8 @@ app.use(bodyParser.json())
 // use our logger
 app.use(logger);
 
-// app.use('/api/v1/song', song);
-// app.use('/api/v1/artist', artist);
+// app.use('/api/v1/menu', menu);
+// app.use('/api/v1/restaurant', restaurant);
 app.use('/api/v1/user', user);
 
 
