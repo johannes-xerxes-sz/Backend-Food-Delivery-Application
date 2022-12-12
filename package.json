@@ -17,6 +17,7 @@
     "mongodb": "^4.12.1",
     "mongoose": "^6.8.0",
     "morgan": "^1.10.0",
+    "serverless": "^3.25.1",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
   },
@@ -28,7 +29,7 @@
   "scripts": {
     "start": "NODE_ENV=production node server",
     "dev": "nodemon server",
-    "test": "jest --coverage" 
+    "test": "jest --coverage"
   },
   "name": "food-delivery",
   "version": "1.0.0",
