@@ -23,7 +23,7 @@ const RatingSchema = new Schema ({
     timestamps: true
 })
 
-const menuSchema = new Schema({
+const RestaurantSchema = new Schema({
     name: {  
         type: String,
         required: true,
@@ -43,4 +43,4 @@ const menuSchema = new Schema({
     timestamps: true
 })
 
-module.exports = mongoose.model('menu', menuSchema);
+module.exports = mongoose.model('Restaurant', RestaurantSchema);

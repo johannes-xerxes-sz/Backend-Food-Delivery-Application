@@ -9,4 +9,5 @@ npm i -D nodemon aws-sdk jest
 npm i stripe uuid 
 
 food customizer ingridients picker and favorates
-notes location api, weather api (make the driver safe), food api, for meal planner api
+notes location api, weather api (make the driver safe), food api, for meal planner api, email,
+date and time api, 
