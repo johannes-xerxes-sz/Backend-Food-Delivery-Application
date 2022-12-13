@@ -7,3 +7,6 @@ npm i axios bcryptjs body-parser cors dotenv
 
 npm i -D nodemon aws-sdk jest
 npm i stripe uuid 
+
+food customizer ingridients picker and favorates
+notes location api, weather api (make the driver safe), food api, for meal planner api
