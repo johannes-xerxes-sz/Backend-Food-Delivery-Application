@@ -1,3 +1,45 @@
+const adminValidator = (req, res, next) => {
+    if (req.user.admin) {
+        next()
+    }
+    else {
+        res
+        .status(403)
+        .setHeader('Content-Type', 'application/json')
+        .json({success: false, msg: 'Unauthorized to access this resource!'})
+    }
+}
+
+const ownerValidator = (req, res, next) => {
+    if (req.user.admin) {
+        next()
+    }
+    else if (req.user.owner){
+        next()
+    }
+    else {
+        res
+        .status(403)
+        .setHeader('Content-Type', 'application/json')
+        .json({success: false, msg: 'Unauthorized to access this resource!'})
+    }
+}
+
+const driverValidator = (req, res, next) => {
+    if (req.user.admin) {
+        next()
+    }
+    else if (req.user.driver){
+        next()
+    }
+    else {
+        res
+        .status(403)
+        .setHeader('Content-Type', 'application/json')
+        .json({success: false, msg: 'Unauthorized to access this resource!'})
+    }
+}
+
 const userValidator = (req, res, next) => { 
     if (req.body) {
         if (!req.body.userName || 

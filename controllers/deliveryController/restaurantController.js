@@ -9,7 +9,8 @@ const getRestaurants = async (req, res, next) => {
         const {
             name,
             cuisine,
-            priceRange
+            priceRange,
+            sortByName
         } = req.query
 
         if(name) filter.name = true
@@ -17,13 +18,15 @@ const getRestaurants = async (req, res, next) => {
         if(priceRange) filter.priceRange = true
 
         if(limit) options.limit = limit
-        if(sortByGenre) options.sort = {
-            genre: sortByGenre === 'asc' ? 1: -1
-        }
+        if (sortByName) {
+            options.sort = {
+              name: sortByName === 'asc' ? 1 : -1
+            };
+          }
     }
 
     try {
-        const restaurants = await restaurant.find({ }, filter, options)
+        const restaurants = await Restaurant.find({ }, filter, options)
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -67,7 +70,7 @@ const deleteRestaurants = async (req, res, next) => {
 
 const getRestaurant = async (req, res, next) => {
     try {
-        const result = await restaurant.findById(req.params.restaurantId);
+        const result = await Restaurant.findById(req.params.restaurantId);
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')

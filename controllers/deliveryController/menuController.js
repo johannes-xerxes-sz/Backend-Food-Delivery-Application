@@ -12,7 +12,7 @@ const getMenus = async (req, res, next) => {
             restaurant,
             type,
             price,
-            sortByRestaurant
+            sortByName
         } = req.query
 
         if (name) filter.name = true;
@@ -22,9 +22,11 @@ const getMenus = async (req, res, next) => {
 
 
         if (limit) options.limit = limit;
-        if (sortByRestaurant) options.sort = {
-            restaurant: sortByRestaurant === 'asc' ? 1 : -1
-        }
+        if (sortByName) {
+            options.sort = {
+              name: sortByName === 'asc' ? 1 : -1
+            };
+          }
     }
 
     try {

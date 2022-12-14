@@ -1,5 +1,45 @@
 const Payment = require("../models/Payment");
-// require('dotenv').config()
+
+const getPayments = async (req, res, next) => {
+
+    const filter = {};
+    const options = {};
+    if(Object.keys(req.query).length){
+        // query parameter
+        const {
+            amount,
+            currency,
+            source,
+            description,
+            sortByAmount
+        } = req.query
+
+        if(amount) filter.amount = true
+        if(currency) filter.currency = true
+        if(source) filter.source = true
+        if(description) filter.description = true
+
+
+        if(limit) options.limit = limit
+        if (sortByAmount) {
+            options.sort = {
+              amount: sortByAmount === 'asc' ? 1 : -1
+            };
+          }
+    }
+
+    try {
+        const payment = await Payment.find({ }, filter, options)
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(payment)
+
+    } catch (err) {
+        throw new Error(`Error retrieving all payment: ${err.message}`)
+    }
+    
+}
 
 const postPayment = async (req, res, next) => {
     try {
@@ -33,5 +73,6 @@ const postPayment = async (req, res, next) => {
 
 
 module.exports = {
+    getPayments,
     postPayment
 }

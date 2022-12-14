@@ -4,8 +4,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const logger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error');
+
 const restaurant = require('./routes/delivery/restaurant');
 const menu = require('./routes/delivery/menu');
+// const cart = require('./routes/delivery/cart');
+
+
 const user = require('./routes/user');
 const payment = require('./routes/payment');
 
@@ -15,7 +19,6 @@ const connectDB = require('./config/db');
 
 
 dotenv.config({ path: './config/config.env' });
-
 connectDB();
 
 const app = express(); 
