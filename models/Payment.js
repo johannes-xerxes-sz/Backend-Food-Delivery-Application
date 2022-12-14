@@ -7,7 +7,7 @@ const PaymentSchema = new Schema({
         type: Number,
         required: true
     },
-    amount: {  
+    currency: {  
         type: String,
         required: true
     },     

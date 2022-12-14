@@ -26,13 +26,15 @@ const getUsers = async (req, res, next) => {
         if (age) filter.age = true;
 
         if (limit) options.limit = limit;
-        if (sortByAge) options.sort = {
-            age: sortByAge === 'asc' ? 1 : -1
-        }
+        if (sortByAge) {
+            options.sort = {
+              age: sortByAge === 'asc' ? 1 : -1
+            };
+          }
     }
 
     try { 
-        const users = await User.find({}, filter, options );
+        const users = await User.find( filter, options, {} );
     res
     .status(200)
     .setHeader('Content-Type', 'application/json')

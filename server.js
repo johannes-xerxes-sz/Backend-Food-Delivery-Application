@@ -42,13 +42,14 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is listening on PORT: ${PORT}`)
 })
 
 // process our error and close off our server
 process.on('unhandledRejection', (err, promise) => {
     console.log(`Error ${err.message}`);
-    // kill server
+    
+    // // kill server
     server.close(() => process.exit(1))
 })

@@ -8,7 +8,19 @@ const postPayment = async (req, res, next) => {
     // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
 
     const payment = await stripe.charges.create(req.body);
-    const charge = await Payment.create(payment);
+    const {
+        amount,
+        currency,
+        source,
+        description
+    }= payment
+
+    const charge = await Payment.create({
+        amount,
+        currency,
+        source: source.brand,
+        description
+    });
         res
         .status(201)
         .setHeader('Content-Type', 'application/json')
