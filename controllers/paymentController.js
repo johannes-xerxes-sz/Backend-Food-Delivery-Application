@@ -1,11 +1,9 @@
 const Payment = require("../models/Payment");
-const Stripe = require('stripe');
-const stripe = Stripe('sk_test_51ME50LADTB6s80w4mWZa9Lp5EamC5PTS9xEps13JxBeQqxqDWZanqZ5XJguPMNlwU1IyoPXKsc8OtECDZqgCPWUT00WGsRjKKa');
+// require('dotenv').config()
 
 const postPayment = async (req, res, next) => {
     try {
-        // const payment = await Payment.create(req.body);
-    // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
     const payment = await stripe.charges.create(req.body);
     const {
