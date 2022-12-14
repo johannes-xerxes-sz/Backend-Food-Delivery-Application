@@ -1,4 +1,4 @@
-const menu = require('../models/delivery/Menu');
+const Menu = require('../../models/delivery/Menu');
 
 //! For ‘/’ startpoint: 
 
@@ -12,7 +12,7 @@ const getMenus = async (req, res, next) => {
             restaurant,
             type,
             price,
-            sortByRestaurant
+            sortByName
         } = req.query
 
         if (name) filter.name = true;
@@ -22,13 +22,15 @@ const getMenus = async (req, res, next) => {
 
 
         if (limit) options.limit = limit;
-        if (sortByRestaurant) options.sort = {
-            restaurant: sortByRestaurant === 'asc' ? 1 : -1
-        }
+        if (sortByName) {
+            options.sort = {
+              name: sortByName === 'asc' ? 1 : -1
+            };
+          }
     }
 
     try {
-        const menus = await menu.find({}, filter, options);
+        const menus = await Menu.find({}, filter, options);
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -44,7 +46,7 @@ const getMenus = async (req, res, next) => {
 
 const postMenu = async (req, res, next) => {
     try {
-        const menu = await menu.create(req.body);
+        const menu = await Menu.create(req.body);
         res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -61,7 +63,7 @@ const postMenu = async (req, res, next) => {
 
 const deleteMenus = async  (req, res, next) => {
     try {
-        await menu.deleteMany();
+        await Menu.deleteMany();
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -78,7 +80,7 @@ const deleteMenus = async  (req, res, next) => {
 
 const getMenu = async  (req, res, next) => {
     try {
-        const result = await menu.findById(req.params.menuId);
+        const result = await Menu.findById(req.params.menuId);
         
     res
     .status(200)
@@ -93,7 +95,7 @@ const getMenu = async  (req, res, next) => {
 
 const updateMenu = async  (req, res, next) => {
     try {
-        const result = await menu.findByIdAndUpdate(req.params.menuId, {
+        const result = await Menu.findByIdAndUpdate(req.params.menuId, {
             $set: req.body
         }, { new: true});
         res
@@ -109,7 +111,7 @@ const updateMenu = async  (req, res, next) => {
 
 const deleteMenu = async  (req, res, next) => {
     try {
-        await menu.findByIdAndDelete(req.params.menuId);
+        await Menu.findByIdAndDelete(req.params.menuId);
 
         res
         .status(200)
@@ -127,7 +129,7 @@ const deleteMenu = async  (req, res, next) => {
 
 const getMenuRatings = async (req, res, next) => {
     try {
-        const menu = await menu.findById(req.params.menuId);
+        const menu = await Menu.findById(req.params.menuId);
         const ratings = menu.ratings;
 
         res
@@ -143,7 +145,7 @@ const getMenuRatings = async (req, res, next) => {
 
 const postMenuRating = async (req, res, next) => {
     try {
-        const menu = await menu.findById(req.params.menuId);
+        const menu = await Menu.findById(req.params.menuId);
         menu.ratings.push(req.body);
         
         const result = await menu.save();
@@ -159,7 +161,7 @@ const postMenuRating = async (req, res, next) => {
 
 const deleteMenuRatings = async (req, res, next) => {
     try {
-        const menu = await menu.findById(req.params.menuId);
+        const menu = await Menu.findById(req.params.menuId);
         menu.ratings = [];
         await menu.save();
 
@@ -178,7 +180,7 @@ const deleteMenuRatings = async (req, res, next) => {
 
 const getMenuRating = async (req, res, next) => {
     try {
-        const menu = await menu.findById(req.params.menuId)
+        const menu = await Menu.findById(req.params.menuId)
         const rating = menu.ratings.find(rating => (rating._id).equals(req.params.ratingId))
         if(!rating) {rating = {success:false, msg: `No rating found with rating id: ${req.params.ratingId}`}}
         res
@@ -193,7 +195,7 @@ const getMenuRating = async (req, res, next) => {
 
 const updateMenuRating = async (req, res, next) => {
     try {
-        const menu = await menu.findById(req.params.menuId);
+        const menu = await Menu.findById(req.params.menuId);
         let rating = menu.ratings.find(rating => (rating._id).equals(req.params.ratingId))
 
         if(rating) {
@@ -218,7 +220,7 @@ const updateMenuRating = async (req, res, next) => {
 
 const deleteMenuRating = async (req, res, next) => {
     try {
-    let menu = await menu.findById(req.params.menuId);
+    let menu = await Menu.findById(req.params.menuId);
     let rating = menu.ratings.find(rating => (rating._id).equals(req.params.ratingId));
         if (rating) {
             const ratingIndexPosition = menu.ratings.indexOf(rating);

@@ -14,21 +14,21 @@ const {
     updateMenuRating,
     deleteMenuRating
 
-} = require('../controllers/menuController');
-const reqRecievedLogger = require('../middlewares/reqRecievedLogger')
-const {MenuValidator} = require('../middlewares/utils/validators')
+} = require('../../controllers/deliveryController/menuController');
+const reqRecievedLogger = require('../../middlewares/reqRecievedLogger')
+const {menuValidator} = require('../../middlewares/utils/validators')
  
 
 //root
 
 router.route('/')
     .get(reqRecievedLogger, getMenus)
-    .post(reqRecievedLogger, MenuValidator, postMenu)
+    .post(reqRecievedLogger, menuValidator, postMenu)
     .delete(reqRecievedLogger, deleteMenus)
 
 
     router.route('/:menuId')
-    .get(reqRecievedLogger, getMenu)
+    .get(reqRecievedLogger, getMenu) 
     .put(reqRecievedLogger, updateMenu)
     .delete(reqRecievedLogger, deleteMenu)
 

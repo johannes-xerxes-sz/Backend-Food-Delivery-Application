@@ -9,14 +9,14 @@ const {
     deleteRestaurant,
     getRestaurantRatings,
     postRestaurantRating,
-    deleteRestaurantRatings,
+    deleteRestaurantRatings, 
     getRestaurantRating,
     updateRestaurantRating,
     deleteRestaurantRating
 
-} = require('../controllers/restaurantController');
- const reqRecievedLogger = require('../middlewares/reqRecievedLogger')
-const {restaurantValidator} = require('../middlewares/utils/validators')
+} = require('../../controllers/deliveryController/restaurantController');
+ const reqRecievedLogger = require('../../middlewares/reqRecievedLogger')
+const {restaurantValidator} = require('../../middlewares/utils/validators')
 
 
 //root

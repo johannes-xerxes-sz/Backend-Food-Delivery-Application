@@ -1,4 +1,4 @@
-const restaurant = require('../models/delivery/Restaurant');
+const Restaurant = require('../../models/delivery/Restaurant');
 
 const getRestaurants = async (req, res, next) => {
 
@@ -9,7 +9,8 @@ const getRestaurants = async (req, res, next) => {
         const {
             name,
             cuisine,
-            priceRange
+            priceRange,
+            sortByName
         } = req.query
 
         if(name) filter.name = true
@@ -17,13 +18,15 @@ const getRestaurants = async (req, res, next) => {
         if(priceRange) filter.priceRange = true
 
         if(limit) options.limit = limit
-        if(sortByGenre) options.sort = {
-            genre: sortByGenre === 'asc' ? 1: -1
-        }
+        if (sortByName) {
+            options.sort = {
+              name: sortByName === 'asc' ? 1 : -1
+            };
+          }
     }
 
     try {
-        const restaurants = await restaurant.find({ }, filter, options)
+        const restaurants = await Restaurant.find({ }, filter, options)
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -37,7 +40,7 @@ const getRestaurants = async (req, res, next) => {
 
 const postRestaurant = async (req, res, next) => {
     try {
-        const restaurant= await restaurant.create(req.body);
+        const restaurant= await Restaurant.create(req.body);
         res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -51,7 +54,7 @@ const postRestaurant = async (req, res, next) => {
 
 const deleteRestaurants = async (req, res, next) => {
     try {
-        await restaurant.deleteMany();
+        await Restaurant.deleteMany();
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -67,7 +70,7 @@ const deleteRestaurants = async (req, res, next) => {
 
 const getRestaurant = async (req, res, next) => {
     try {
-        const result = await restaurant.findById(req.params.restaurantId);
+        const result = await Restaurant.findById(req.params.restaurantId);
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -80,7 +83,7 @@ const getRestaurant = async (req, res, next) => {
 
 const updateRestaurant = async (req, res, next) => {
     try {
-        const result = await restaurant.findByIdAndUpdate(req.params.restaurantId, {
+        const result = await Restaurant.findByIdAndUpdate(req.params.restaurantId, {
             $set: req.body
 
         }, {new: true});
@@ -97,7 +100,7 @@ const updateRestaurant = async (req, res, next) => {
 
 const deleteRestaurant = async (req, res, next) => {
     try {
-        await restaurant.findByIdAndDelete(req.params.restaurantId);
+        await Restaurant.findByIdAndDelete(req.params.restaurantId);
         res 
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -116,7 +119,7 @@ const deleteRestaurant = async (req, res, next) => {
 
 const getRestaurantRating = async (req, res, next) => {
     try {
-        const restaurant = await restaurant.findById(req.params.restaurantId)
+        const restaurant = await Restaurant.findById(req.params.restaurantId)
         const rating = restaurant.ratings.find(rating => (rating._id).equals(req.params.ratingId))
         if(!rating) {rating = {success:false, msg: `No rating found with rating id: ${req.params.ratingId}`}}
         res
@@ -131,7 +134,7 @@ const getRestaurantRating = async (req, res, next) => {
 
 const updateRestaurantRating = async (req, res, next) => {
     try {
-        const restaurant = await restaurant.findById(req.params.restaurantId);
+        const restaurant = await Restaurant.findById(req.params.restaurantId);
         let rating = restaurant.ratings.find(rating => (rating._id).equals(req.params.ratingId))
 
         if(rating) {
@@ -156,7 +159,7 @@ const updateRestaurantRating = async (req, res, next) => {
 
 const deleteRestaurantRating = async (req, res, next) => {
     try {
-    let restaurant = await restaurant.findById(req.params.restaurantId);
+    let restaurant = await Restaurant.findById(req.params.restaurantId);
     let rating = restaurant.ratings.find(rating => (rating._id).equals(req.params.ratingId));
         if (rating) {
             const ratingIndexPosition = restaurant.ratings.indexOf(rating);
@@ -180,7 +183,57 @@ const deleteRestaurantRating = async (req, res, next) => {
     }
 }
 
+//! For '/:restaurantId/ratings' startpoint
 
+const getRestaurantRatings = async (req, res, next) => {
+    try {
+        const restaurant = await Restaurant.findById(req.params.restaurantId);
+        const ratings = restaurant.ratings;
+
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(ratings)
+
+    }
+    catch (err) {
+        throw new Error (`Error retrieving all ratings: ${err.message}`)
+    }
+}
+
+const postRestaurantRating = async (req, res, next) => {
+    try {
+        const restaurant = await Restaurant.findById(req.params.restaurantId);
+        restaurant.ratings.push(req.body);
+        
+        const result = await restaurant.save();
+        res
+        .status(201) //need_clarify
+        .setHeader('Content-Type', 'application/json')
+        .json(result)
+    }
+    catch (err) {
+        throw new Error(`Error posting a restaurant rating: ${err.message}`)
+    }
+}
+
+const deleteRestaurantRatings = async (req, res, next) => {
+    try {
+        const restaurant = await Restaurant.findById(req.params.restaurantId);
+        restaurant.ratings = [];
+        await restaurant.save();
+
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json({ success: true, msg: `deleted all ratings`})
+    }
+    catch (err) {
+        throw new Error(`Error deleting all ratings: ${err.message}`)
+    }
+}
+
+//! For '/:restaurantId/ratings' endpoint
 //! For '/:restaurantId/ratings/:ratingId' endpoint
 
 module.exports = {
@@ -191,6 +244,9 @@ module.exports = {
     getRestaurant,
     updateRestaurant,
     deleteRestaurant,
+    getRestaurantRatings,
+    postRestaurantRating,
+    deleteRestaurantRatings, 
     getRestaurantRating,    
     updateRestaurantRating,
     deleteRestaurantRating
