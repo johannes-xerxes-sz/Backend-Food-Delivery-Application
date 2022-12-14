@@ -33,12 +33,12 @@ const CartSchema = new Schema({
         type: Number,
         required: true
     },
-    // totalQuantity: {  
+    // totalQuantity: {   
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: Object.keys(FoodSchema).length,
     //     type: Number,
     //     required: true
-    // },
+    // }, 
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
