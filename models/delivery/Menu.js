@@ -14,11 +14,32 @@ const RatingSchema = new Schema ({
     },
     text: {
         type: String,
-        required: true,
+        required: true
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    }
+}, {
+    timestamps: true
+})
+
+const IngredientsSchema = new Schema ({
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    quantity: {
+        type: String,
+        required: true
+    },
+    nutritional: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true
@@ -45,6 +66,7 @@ const MenuSchema = new Schema({
             'dessert'
         ]
     },
+    ingredients: [IngredientsSchema],
     price: { 
         type: Number
     },
