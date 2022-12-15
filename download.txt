@@ -1,9 +1,7 @@
 npm init -y
 
-npm i express-fileupload express-mongo-sanitize express-rate-limit helmet hpp 
-jsonwebtoken mongodb mongoose validator xss-clean
-npm i body-parser dotenv express morgan  
-npm i axios bcryptjs body-parser cors dotenv  
+npm i express-fileupload express-mongo-sanitize express-rate-limit helmet hpp jsonwebtoken mongodb mongoose validator xss-clean
+npm i body-parser dotenv express morgan axios bcryptjs body-parser cors dotenv  
 
 npm i -D nodemon aws-sdk jest
 npm i stripe uuid 
@@ -31,6 +29,8 @@ delivery
 - deli true
 
 driver ep
-- add ep
+- add eps
 - gets del
 - add avail
+
+test gits
