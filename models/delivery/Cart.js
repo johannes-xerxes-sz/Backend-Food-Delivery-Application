@@ -5,11 +5,11 @@ const validator = require('validator');
 const FoodSchema = new Schema ({
     menu: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'menu'
+        ref: 'Menu'
     },
     ingredients: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'menu.ingredients' // get ingredients within an object
+        ref: 'Menu.Ingredients' // get ingredients within an object
     },
     quantity: [QuantitySchema],
     description: {
@@ -34,7 +34,7 @@ const QuantitySchema = new Schema ({
 })
 
 const CartSchema = new Schema({
-    orderNumber: {
+    cartNumber: {
         type: String,
         required: true
     },
@@ -64,7 +64,21 @@ const CartSchema = new Schema({
         type: Boolean,
         default: false
     },
-    foods: [FoodSchema]
+    foods: [FoodSchema],
+    driver: [DeliverySchema]
+}, {
+    timestamps: true
+})
+
+const DeliverySchema = new Schema ({
+    driverName: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Driver'
+    },
+    driver: {
+        type: String,
+    },
+
 }, {
     timestamps: true
 })
