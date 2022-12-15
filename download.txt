@@ -1,9 +1,7 @@
 npm init -y
 
-npm i express-fileupload express-mongo-sanitize express-rate-limit helmet hpp 
-jsonwebtoken mongodb mongoose validator xss-clean
-npm i body-parser dotenv express morgan  
-npm i axios bcryptjs body-parser cors dotenv  
+npm i express-fileupload express-mongo-sanitize express-rate-limit helmet hpp jsonwebtoken mongodb mongoose validator xss-clean
+npm i body-parser dotenv express morgan axios bcryptjs body-parser cors dotenv  
 
 npm i -D nodemon aws-sdk jest
 npm i stripe uuid 
@@ -11,3 +9,28 @@ npm i stripe uuid
 food customizer ingridients picker and favorates
 notes location api, weather api (make the driver safe), food api, for meal planner api, email,
 date and time api, 
+
+cart ctr
+- food ep
+- quantity ep
+- confirm if final
+- send data to delivery
+
+menu ctr
+- ingred ep
+
+delivery ctr, rou, mod
+- add ep
+
+delivery
+- total payment
+- payment ep (card)
+- get available driver - add nearest
+- deli true
+
+driver ep
+- add eps
+- gets del
+- add avail
+
+test gits
