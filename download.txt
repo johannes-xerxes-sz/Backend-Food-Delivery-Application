@@ -11,3 +11,26 @@ npm i stripe uuid
 food customizer ingridients picker and favorates
 notes location api, weather api (make the driver safe), food api, for meal planner api, email,
 date and time api, 
+
+cart ctr
+- food ep
+- quantity ep
+- confirm if final
+- send data to delivery
+
+menu ctr
+- ingred ep
+
+delivery ctr, rou, mod
+- add ep
+
+delivery
+- total payment
+- payment ep (card)
+- get available driver - add nearest
+- deli true
+
+driver ep
+- add ep
+- gets del
+- add avail

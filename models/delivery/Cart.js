@@ -11,13 +11,22 @@ const FoodSchema = new Schema ({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'menu.ingredients' // get ingredients within an object
     },
-    quantity: {
-        type: String,
-        required: true
-    },
+    quantity: [QuantitySchema],
     description: {
         type: String,
         required: true
+    }
+
+}, {
+    timestamps: true
+})
+
+const QuantitySchema = new Schema ({
+    toAdd: {
+        type: String,
+    },
+    toRemove: {
+        type: String,
     }
 
 }, {
