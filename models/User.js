@@ -4,6 +4,8 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const MapboxClient = require('mapbox');
+
 
 const UserSchema = new Schema({
     userName: {  
@@ -50,6 +52,16 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         maxLength: 10
+    }, 
+    address: {
+        type: String,
+        required: true,
+    },
+    latitude: {
+        type: String,
+    },
+    longitude: {
+        type: String,
     },
     resetPasswordToken: {
         type: String
@@ -114,6 +126,29 @@ return resetToken;
 
 UserSchema.post('save', function ()  {
 this.firstName = this.gender.toUpperCase();
+
+const privateKey = process.env.LOCATION_API_KEY;
+const client = new MapboxClient(privateKey);
+const geocodePromise = new Promise((resolve, reject) => {
+    client.geocodeForward(this.address, async (err, data) => {
+        if (err) {
+            reject(err);
+        }
+        this.latitude = data.features[0].geometry.coordinates[1];
+        this.longitude = data.features[0].geometry.coordinates[0];
+        console.log(this.latitude)
+
+        resolve();
+    });
+});
+
+geocodePromise.then(() => {
+this.longitude = this.longitude
+this.latitude = this.latitude
+console.log(this.latitude)
+});
+console.log(this.latitude)
+
 }) 
 
 module.exports = mongoose.model('User', UserSchema);
