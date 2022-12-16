@@ -73,9 +73,9 @@ const CartSchema = new Schema({
 const DeliverySchema = new Schema ({
     driverName: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Driver'
+        ref: 'User'
     },
-    driver: {
+    driverDistance: {
         type: String,
     },
 
