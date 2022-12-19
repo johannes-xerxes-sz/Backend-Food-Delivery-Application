@@ -53,15 +53,19 @@ const UserSchema = new Schema({
         required: true,
         maxLength: 10
     }, 
+    number: {
+        type: Number,
+        required: true
+    },
     address: {
         type: String,
-        required: true,
+        required: true
     },
     latitude: {
-        type: String,
+        type: Number
     },
     longitude: {
-        type: String,
+        type: Number
     },
     resetPasswordToken: {
         type: String
@@ -82,8 +86,6 @@ const UserSchema = new Schema({
         default: false
     }
 
-
-
 }, {
     timestamps: true
 }
@@ -92,40 +94,38 @@ UserSchema.pre('save',  function (next) {
     this.userName = this.userName.trim();
     this.firstName = this.firstName.trim();
     this.lastName = this.lastName.trim();
+
     next();
    
 })
 
 UserSchema.pre('save', async function (next) {
-/*     this.userName = this.userName.trim();
-this.firstName = this.firstName.trim();
-this.lastName = this.lastName.trim();
-*/
 
-const privateKey = process.env.LOCATION_API_KEY;
-const client = new MapboxClient(privateKey);
-const geocodePromise = new Promise((resolve, reject) => {
-    client.geocodeForward(this.address, async (err, data) => {
-        if (err) {
-            reject(err);
-        }
-        this.latitude = data.features[0].geometry.coordinates[1];
-        this.longitude = data.features[0].geometry.coordinates[0];
-        console.log(this.latitude)
+    const privateKey = process.env.LOCATION_API_KEY;
+    const client = new MapboxClient(privateKey);
+    const geocodePromise = new Promise((resolve, reject) => {
+        client.geocodeForward(this.address, async (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            this.latitude = data.features[0].geometry.coordinates[1];
+            this.longitude = data.features[0].geometry.coordinates[0];
+            console.log(this.latitude)
+    
+            resolve();
+        })
+    })
+    
+    geocodePromise.then(() => {
+     this.longitude = this.longitude
+     this.latitude = this.latitude
+    console.log(this.latitude)
+    })
+    return geocodePromise;
+    console.log('undefined', this.latitude) // undefined
 
-        resolve();
-    });
-});
-
-geocodePromise.then(() => {
-this.longitude = this.longitude
-this.latitude = this.latitude
-console.log(this.latitude)
-});
-console.log(this.latitude) // undefined
-
-if (!this.isModified('password')) next();
-
+if (!this.isModified('password'))
+ next();
 const salt = await bcrypt.genSalt(10);
 this.password = await bcrypt.hash(this.password, salt)
 })

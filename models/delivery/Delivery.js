@@ -1,55 +1,45 @@
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
-// const validator = require('validator');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const validator = require('validator');
 
 
+const DeliverySchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },     
+    cart: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Cart'
+    }],
+    restaurant: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Restaurant'
+    }],
+    user: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'User'
+    }],
+    isDelivered: {
+        type: Boolean,
+        default: false
+    },
+    currentAddress: {
+        type: String
+    },
+    latitude: {
+        type: String,
+    },
+    longitude: {
+        type: String,
+    }
+}, {
+    timestamps: true
+})
 
-// const QuantitySchema = new Schema ({
-//     toAdd: {
-//         type: String,
-//     },
-//     toRemove: {
-//         type: String,
-//     }
+DeliverySchema.pre('save',  function (next) {
+    
+   
+})
 
-// }, {
-//     timestamps: true
-// })
-
-// const DeliverySchema = new Schema({
-//     cartNumber: {
-//         type: String,
-//         required: true
-//     },
-//     totalPrice: {  // plus distance cost
-//         type: Number,
-//         required: true
-//     },
-//     // totalQuantity: {   
-//     //     type: mongoose.Schema.Types.ObjectId,
-//     //     ref: Object.keys(FoodSchema).length,
-//     //     type: Number,
-//     //     required: true
-//     // }, 
-//     author: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'User'
-//     },
-//     modePayment: {
-//         type: String,
-//         required: true, 
-//         enum: [
-//             'cash',
-//             'card'
-//         ]
-//     },
-//     confirmed: {
-//         type: Boolean,
-//         default: false
-//     },
-//     foods: [FoodSchema]
-// }, {
-//     timestamps: true
-// })
-
-// module.exports = mongoose.model('Delivery', DeliverySchema);
+module.exports = mongoose.model('Delivery', DeliverySchema);

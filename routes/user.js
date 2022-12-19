@@ -22,9 +22,9 @@ const {userValidator} = require('../middlewares/utils/validators')
 //root
 
 router.route('/')
-    .get(reqRecievedLogger, protectedRoute, getUsers) 
+    .get(reqRecievedLogger, getUsers) 
     .post(reqRecievedLogger, userValidator, postUser)
-    .delete(reqRecievedLogger, protectedRoute, deleteUsers)
+    .delete(reqRecievedLogger, deleteUsers)
 
     //login - logout
  

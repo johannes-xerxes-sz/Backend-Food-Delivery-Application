@@ -1,25 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
-
-const FoodSchema = new Schema ({
-    menu: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu'
-    },
-    ingredients: {
-        type: mongoose.Schema.Types.ObjectId
-        // make an endpoit to retrieve a subschema from the backend then parse into getting that ingredients
-    },
-    quantity: [QuantitySchema],
-    description: {
-        type: String,
-        required: true
-    }
-
-}, {
-    timestamps: true
-})
+const MapboxClient = require('mapbox');
 
 const QuantitySchema = new Schema ({
     toAdd: {
@@ -33,56 +15,128 @@ const QuantitySchema = new Schema ({
     timestamps: true
 })
 
-const CartSchema = new Schema({
-    cartNumber: {
+const FoodSchema = new Schema ({
+    menu: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
+    },
+    ingredients: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu' // make an endpoint to retrieve a subschema from the backend then parse into getting that ingredients
+    },
+    quantity: [QuantitySchema],
+    description: {
         type: String,
         required: true
     },
-    totalPrice: {  // plus distance cost
+    price: {
         type: Number,
         required: true
+    }
+
+}, {
+    timestamps: true
+})
+
+
+
+const CartSchema = new Schema({
+    address: {
+        type: String,
+        required: true
+    },    
+    latitude: {
+        type: String
     },
-    // totalQuantity: {   
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: Object.keys(FoodSchema).length,
-    //     type: Number,
-    //     required: true
-    // }, 
+    longitude: {
+        type: String
+    },
+    totalPrice: {  // plus distance cost
+        type: Number,
+    },
+    totalQuantity: {   
+        type: Number,
+    }, 
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    modePayment: {
-        type: String,
-        required: true, 
-        enum: [
-            'cash',
-            'card'
-        ]
+    card: {
+        type: Boolean,
+        default: false
     },
     confirmed: {
         type: Boolean,
         default: false
     },
     foods: [FoodSchema],
-    driver: [DeliverySchema],
-    restaurant: [{type: Schema.Types.ObjectId, ref: 'Restaurant'}]
+    restaurant: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Restaurant'
+    }]
 
 }, {
     timestamps: true
 })
 
-const DeliverySchema = new Schema ({
-    driverName: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    driverDistance: {
-        type: String,
-    },
+/* CartSchema.pre('save', async function (next) {
 
-}, {
-    timestamps: true
-})
+    // for the latitude and longitude
+    const privateKey = process.env.LOCATION_API_KEY;
+    const client = new MapboxClient(privateKey);
+    const geocodePromise = new Promise((resolve, reject) => {
+        client.geocodeForward(this.address, async (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            this.latitude = data.features[0].geometry.coordinates[1];
+            this.longitude = data.features[0].geometry.coordinates[0];
+    
+            resolve();
+        });
+    });
+    
+    geocodePromise.then(() => {
+    this.longitude = this.longitude
+    this.latitude = this.latitude
+    next();
+    });
+    return geocodePromise;
+
+
+}) */
+
+CartSchema.pre('save', async function (next) {
+    const cart = this;
+    const privateKey = process.env.LOCATION_API_KEY;
+    const client = new MapboxClient(privateKey);
+  
+    client.geocodeForward(this.address, async (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      this.latitude = data.features[0].geometry.coordinates[1];
+      this.longitude = data.features[0].geometry.coordinates[0];
+  
+      function haversineDistance(lat1, lon1, lat2, lon2) {
+        // Haversine formula implementation goes here (see previous answer for example)
+      }
+  
+      // Calculate distance between the restaurant's latitude and longitude and the user's latitude and longitude
+      const distance = haversineDistance(cart.restaurant.latitude, cart.restaurant.longitude, this.latitude, this.longitude);
+  
+      // Convert distance from meters to kilometers
+      const distanceInKm = distance / 1000;
+  
+      // Calculate charge based on distanceInKm
+      const totalDistanceCharge = distanceInKm * 0.50; // charge $0.50 per kilometer
+  
+      // Save the totalDistanceCharge to the totalDistanceCharge field of the cart object
+      cart.totalDistanceCharge = totalDistanceCharge;
+  
+      next();
+    });
+  });
+  
 
 module.exports = mongoose.model('Cart', CartSchema);

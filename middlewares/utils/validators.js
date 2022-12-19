@@ -48,7 +48,8 @@ const userValidator = (req, res, next) => {
             !req.body.email ||
             !req.body.password ||
             !req.body.firstName ||
-            !req.body.lastName ) {
+            !req.body.lastName ||
+            !req.body.address) {
             res
             .status(400)
             .setHeader('Content-Type', 'text/plain')
@@ -134,10 +135,24 @@ const paymentValidator = (req, res, next) => {
     }
 }
 
+// const cardValidator = (req, res, next) => {
+//     if (req.cart.card) {
+//         next()
+//     }
+//     else {
+//         res
+//         .status(403)
+//         .setHeader('Content-Type', 'application/json')
+//         .json({success: false, msg: 'Unauthorized to access this resource!'})
+//     }
+// }
 
 module.exports = {
     userValidator,
     menuValidator,
     restaurantValidator,
-    paymentValidator
+    paymentValidator,
+    adminValidator,
+    ownerValidator,
+    driverValidator
 }

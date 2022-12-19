@@ -45,7 +45,7 @@ const postDelivery = async (req, res, next) => {
     }
     catch (err)
     {
-        throw new Error(`Error deleting Payment: ${err.message}`);
+        throw new Error(`Error posting delivery: ${err.message}`);
     }
 }
 

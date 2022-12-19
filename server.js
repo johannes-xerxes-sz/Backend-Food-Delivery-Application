@@ -6,6 +6,7 @@ const logger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error');
 
 const restaurant = require('./routes/delivery/restaurant');
+const cart = require('./routes/delivery/cart');
 const menu = require('./routes/delivery/menu');
 // const cart = require('./routes/delivery/cart');
 
@@ -34,6 +35,7 @@ app.use(bodyParser.json())
 // use our logger
 app.use(logger);
  
+app.use('/api/v1/cart', cart);
 app.use('/api/v1/menu', menu);
 app.use('/api/v1/restaurant', restaurant);
 app.use('/api/v1/user', user);
