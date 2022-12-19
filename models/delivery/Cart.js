@@ -8,8 +8,8 @@ const FoodSchema = new Schema ({
         ref: 'Menu'
     },
     ingredients: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu.Ingredients' // get ingredients within an object
+        type: mongoose.Schema.Types.ObjectId
+        // make an endpoit to retrieve a subschema from the backend then parse into getting that ingredients
     },
     quantity: [QuantitySchema],
     description: {
@@ -65,7 +65,9 @@ const CartSchema = new Schema({
         default: false
     },
     foods: [FoodSchema],
-    driver: [DeliverySchema]
+    driver: [DeliverySchema],
+    restaurant: [{type: Schema.Types.ObjectId, ref: 'Restaurant'}]
+
 }, {
     timestamps: true
 })

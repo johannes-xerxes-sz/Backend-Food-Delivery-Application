@@ -23,6 +23,8 @@ const RatingSchema = new Schema ({
     timestamps: true
 })
 
+
+
 const RestaurantSchema = new Schema({
     name: {  
         type: String,
@@ -37,8 +39,8 @@ const RestaurantSchema = new Schema({
     priceRange: { 
         type: String
     },
-    ratings: [RatingSchema]
-
+    ratings: [RatingSchema],
+    customer: [{type: Schema.Types.ObjectId, ref: 'Cart'}]
 }, {
     timestamps: true
 })
