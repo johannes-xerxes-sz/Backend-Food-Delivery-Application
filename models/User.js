@@ -53,6 +53,9 @@ const UserSchema = new Schema({
         required: true,
         maxLength: 10
     }, 
+    number: {
+        type: Number
+    },
     address: {
         type: String,
         required: true,
@@ -101,6 +104,8 @@ UserSchema.pre('save', async function (next) {
 this.firstName = this.firstName.trim();
 this.lastName = this.lastName.trim();
 */
+
+// using text api
 
 const privateKey = process.env.LOCATION_API_KEY;
 const client = new MapboxClient(privateKey);

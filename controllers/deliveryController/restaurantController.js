@@ -128,7 +128,7 @@ const getRestaurantRating = async (req, res, next) => {
         .json(rating)
 
     } catch (err) {
-        throw new Error (`Error retrieving raiting with id: ${req.params.ratingId}, ${err.message}`)
+        throw new Error (`Error retrieving rating with id: ${req.params.ratingId}, ${err.message}`)
     }
 }
 
