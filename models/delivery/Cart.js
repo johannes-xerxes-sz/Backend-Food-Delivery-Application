@@ -8,12 +8,16 @@ const FoodSchema = new Schema ({
         ref: 'Menu'
     },
     ingredients: {
-        type: mongoose.Schema.Types.ObjectId
-        // make an endpoit to retrieve a subschema from the backend then parse into getting that ingredients
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu' // make an endpoit to retrieve a subschema from the backend then parse into getting that ingredients
     },
     quantity: [QuantitySchema],
     description: {
         type: String,
+        required: true
+    },
+    price: {
+        type: Number,
         required: true
     }
 
@@ -66,23 +70,17 @@ const CartSchema = new Schema({
     },
     foods: [FoodSchema],
     driver: [DeliverySchema],
-    restaurant: [{type: Schema.Types.ObjectId, ref: 'Restaurant'}]
+    restaurant: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Restaurant'
+    }]
 
 }, {
     timestamps: true
 })
 
-const DeliverySchema = new Schema ({
-    driverName: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    driverDistance: {
-        type: String,
-    },
-
-}, {
-    timestamps: true
+CartSchema.pre('save',  function (next) {
+    this.totalPrice = this.food.price
+   
 })
-
 module.exports = mongoose.model('Cart', CartSchema);
