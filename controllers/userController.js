@@ -14,6 +14,7 @@ const getUsers = async (req, res, next) => {
             lastName,
             limit,
             age,
+            address,
             sortByAge
         } = req.query
 
@@ -22,7 +23,9 @@ const getUsers = async (req, res, next) => {
         if (email) filter.email = true;
         if (password) filter.password = true;
         if (firstName) filter.firstName = true;
+        if (address) filter.address = true;
         if (lastName) filter.lastName = true;
+
         if (age) filter.age = true;
 
         if (limit) options.limit = limit;
