@@ -1,4 +1,4 @@
-const Cart = require("../models/delivery/Cart");
+const Cart = require("../../models/delivery/Cart");
 
 const getCarts = async (req, res, next) => {
 
@@ -6,12 +6,12 @@ const getCarts = async (req, res, next) => {
     const options = {};
     if (Object.keys(req.query).length) {
         const {
-            cartName,
-            gender
+            address,
+            author
         } = req.query
 
-        if (cartName) filter.cartName = true;
-        if (gender) filter.gender = true;
+        if (address) filter.address = true;
+        if (author) filter.author = true;
 
         if (limit) options.limit = limit;
         if (sortByAge) {
@@ -37,7 +37,19 @@ const getCarts = async (req, res, next) => {
 
 const postCart = async (req, res, next) => {
     try {
-        const cart= await Cart.create(req.body);
+        const cart= await (await Cart.create(req.body))
+        .populate([
+            {
+              path: 'author',
+              select: ['userName','address','latitude','longitude']
+            },
+            {
+              path: 'restaurant',
+              select: ['name', 'address','latitude','longitude']
+            }
+          ]);
+
+        
         res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -45,7 +57,7 @@ const postCart = async (req, res, next) => {
     }
     catch (err)
     {
-        throw new Error(`Error deleting Payment: ${err.message}`);
+        throw new Error(`Error posting cart: ${err.message}`);
     }
 }
 

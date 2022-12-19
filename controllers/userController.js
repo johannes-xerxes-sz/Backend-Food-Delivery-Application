@@ -28,6 +28,7 @@ const getUsers = async (req, res, next) => {
         if (lastName) filter.lastName = true;
         if (number) filter.number = true;
 
+
         if (age) filter.age = true;
 
         if (limit) options.limit = limit;

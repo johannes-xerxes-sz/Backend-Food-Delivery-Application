@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
+const MapboxClient = require('mapbox');
+
+const QuantitySchema = new Schema ({
+    toAdd: {
+        type: String,
+    },
+    toRemove: {
+        type: String,
+    }
+
+}, {
+    timestamps: true
+})
 
 const FoodSchema = new Schema ({
     menu: {
@@ -9,7 +22,7 @@ const FoodSchema = new Schema ({
     },
     ingredients: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu' // make an endpoit to retrieve a subschema from the backend then parse into getting that ingredients
+        ref: 'Menu' // make an endpoint to retrieve a subschema from the backend then parse into getting that ingredients
     },
     quantity: [QuantitySchema],
     description: {
@@ -25,51 +38,38 @@ const FoodSchema = new Schema ({
     timestamps: true
 })
 
-const QuantitySchema = new Schema ({
-    toAdd: {
-        type: String,
-    },
-    toRemove: {
-        type: String,
-    }
 
-}, {
-    timestamps: true
-})
 
 const CartSchema = new Schema({
-    cartNumber: {
+    address: {
         type: String,
         required: true
+    },    
+    latitude: {
+        type: String
+    },
+    longitude: {
+        type: String
     },
     totalPrice: {  // plus distance cost
         type: Number,
-        required: true
     },
-    // totalQuantity: {   
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: Object.keys(FoodSchema).length,
-    //     type: Number,
-    //     required: true
-    // }, 
+    totalQuantity: {   
+        type: Number,
+    }, 
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    modePayment: {
-        type: String,
-        required: true, 
-        enum: [
-            'cash',
-            'card'
-        ]
+    card: {
+        type: Boolean,
+        default: false
     },
     confirmed: {
         type: Boolean,
         default: false
     },
     foods: [FoodSchema],
-    driver: [DeliverySchema],
     restaurant: [{
         type: Schema.Types.ObjectId, 
         ref: 'Restaurant'
@@ -79,8 +79,32 @@ const CartSchema = new Schema({
     timestamps: true
 })
 
-CartSchema.pre('save',  function (next) {
-    this.totalPrice = this.food.price
-   
+CartSchema.pre('save', async function (next) {
+
+    
+    const privateKey = process.env.LOCATION_API_KEY;
+    const client = new MapboxClient(privateKey);
+    const geocodePromise = new Promise((resolve, reject) => {
+        client.geocodeForward(this.address, async (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            this.latitude = data.features[0].geometry.coordinates[1];
+            this.longitude = data.features[0].geometry.coordinates[0];
+            console.log(this.latitude)
+    
+            resolve();
+        });
+    });
+    
+    geocodePromise.then(() => {
+    this.longitude = this.longitude
+    this.latitude = this.latitude
+    console.log(this.latitude)
+    });
+    return geocodePromise;
+    next();
+
 })
+
 module.exports = mongoose.model('Cart', CartSchema);
