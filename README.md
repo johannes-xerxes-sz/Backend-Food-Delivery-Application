@@ -1,8 +1,8 @@
-# Foobar
+# Backend Capstone Project
 
-Foobar is a Python library for dealing with word pluralization.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla urna nibh, gravida in lacus eget, iaculis sollicitudin neque. Aenean eget eros in leo blandit pellentesque non nec massa. 
 
-## Installation
+## Nunc eget turpis efficitur, condimentum nunc eu, imperdiet purus
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
