@@ -22,7 +22,17 @@ const getCarts = async (req, res, next) => {
     }
 
     try { 
-        const carts = await Cart.find( filter, options, {} );
+        const carts = await Cart.find( filter, options, {} )
+        .populate([
+            {
+              path: 'author',
+              select: ['userName','address','latitude','longitude']
+            },
+            {
+              path: 'restaurant',
+              select: ['name', 'address','latitude','longitude']
+            }
+          ]);
     res
     .status(200)
     .setHeader('Content-Type', 'application/json')
@@ -81,7 +91,17 @@ const getCart = async (req, res, next) => {
     
     
     try {
-        const cart = await Cart.findById(req.params.cartId);
+        const cart = await Cart.findById(req.params.cartId)
+        .populate([
+            {
+              path: 'author',
+              select: ['userName','address','latitude','longitude']
+            },
+            {
+              path: 'restaurant',
+              select: ['name', 'address','latitude','longitude']
+            }
+          ]);
 
         res
         .status(200)
@@ -97,7 +117,17 @@ const updateCart = async (req, res, next) => {
     try {
         const cart = await Cart.findByIdAndUpdate(req.params.cartId, {
             $set: req.body
-        }, { new: true});
+        }, { new: true})
+        .populate([
+            {
+              path: 'author',
+              select: ['userName','address','latitude','longitude']
+            },
+            {
+              path: 'restaurant',
+              select: ['name', 'address','latitude','longitude']
+            }
+          ]);
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -139,7 +169,17 @@ const getCartFood = async (req, res, next) => {
 
 const updateCartFood = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId);
+        const cart = await Cart.findById(req.params.cartId)        
+        .populate([
+            {
+              path: 'author',
+              select: ['userName','address','latitude','longitude']
+            },
+            {
+              path: 'restaurant',
+              select: ['name', 'address','latitude','longitude']
+            }
+          ]);
         let food = cart.foods.find(food => (food._id).equals(req.params.foodId))
 
         if(food) {
@@ -192,7 +232,17 @@ const deleteCartFood = async (req, res, next) => {
 
 const getCartFoods = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId);
+        const cart = await Cart.findById(req.params.cartId)        
+        .populate([
+            {
+              path: 'menu',
+              select: ['name']
+            },
+            {
+              path: 'ingredients.name',
+              select: ['name']
+            }
+          ]);
         const foods = cart.foods;
 
         res

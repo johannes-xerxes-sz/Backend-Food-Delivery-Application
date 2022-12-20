@@ -143,7 +143,7 @@ const paymentValidator = (req, res, next) => {
 //         res
 //         .status(403)
 //         .setHeader('Content-Type', 'application/json')
-//         .json({success: false, msg: 'Unauthorized to access this resource!'})
+//         .json({success: false, msg: 'Hi, you are paying by cash'})
 //     }
 // }
 

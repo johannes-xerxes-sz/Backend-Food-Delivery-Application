@@ -1,117 +1,118 @@
-//! For '/:CartId/cart/:cartId/:quantityId' endpoint
+//! For '/:menuId/ingredients' startpoint
 
-const getCartFoodQuantity = async (req, res, next) => {
+const getMenuIngredients = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId)
-        const quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
-        if(!quantity) {quantity = {success:false, msg: `No quantity found with quantity id: ${req.params.quantityId}`}}
-        res
-        .set(200)
-        .setHeader('Content-Type', 'application/json')
-        .json(quantity)
-
-    } catch (err) {
-        throw new Error (`Error retrieving quantity with id: ${req.params.quantityId}, ${err.message}`)
-    }
-}
-
-const updateCartFoodQuantity = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
-
-        if(quantity) {
-            const quantityIndexPosition = cart.foods.quantity.indexOf(quantity)
-            cart.foods.quantity.splice(quantityIndexPosition, 1, req.body);
-            quantity = cart.foods.quantity[foodIndexPosition]
-            await cart.save();
-        }
-        else {
-            quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
-        }
+        const menu = await Menu.findById(req.params.menuId);
+        const ingredients = menu.ingredients;
 
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
-        .json(quantity);
-    }
-    catch (err) {
-        throw new Error (`Error updating cart with Id: ${req.params.quantityId}:${err.message}`)
-    }
-}
-
-const deleteCartFoodQuantity = async (req, res, next) => {
-    try {
-    let cart = await Cart.findById(req.params.cartId);
-    let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId));
-        if (quantity) {
-            const foodIndexPosition = cart.foods.quantity.indexOf(quantity);
-            cart.foods.quantity.splice(foodIndexPosition, 1);
-            quantity = {success: true, msg: `quantity with Id: ${req.params.quantityId} deleted`}
-            await cart.save();
-
-        }
-        else {
-            quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
-        }
-
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json(quantity)
+        .json(ingredients)
 
     }
     catch (err) {
-        throw new Error (`Error deleting quantity with Id: ${req.params.quantityId} : ${err.message}`)
-    }
-}
-//! For '/:cartId/foods' end point 
-
-const getCartFoodQuantitys = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        const foods = cart.foods.quantity;
-
-        res
-        .status(200)
-        .setHeader('Content-Type', 'application/json')
-        .json(foods)
-
-    }
-    catch (err) {
-        throw new Error (`Error retrieving all foods: ${err.message}`)
+        throw new Error (`Error retrieving all ingredients: ${err.message}`)
     }
 }
 
-const postCartFoodQuantity = async (req, res, next) => {
+const postMenuIngredient = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId);
-        cart.foods.quantity.push(req.body);
+        const menu = await Menu.findById(req.params.menuId);
+        menu.ingredients.push(req.body);
         
-        const result = await cart.save();
+        const result = await menu.save();
         res
         .status(201) //need_clarify
         .setHeader('Content-Type', 'application/json')
         .json(result)
     }
     catch (err) {
-        throw new Error(`Error posting a cart quantity: ${err.message}`)
+        throw new Error(`Error posting a menu ingredient: ${err.message}`)
     }
 }
 
-const deleteCartFoodQuantitys = async (req, res, next) => {
+const deleteMenuIngredients = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId);
-        cart.foods.quantity = [];
-        await cart.save();
+        const menu = await Menu.findById(req.params.menuId);
+        menu.ingredients = [];
+        await menu.save();
 
         res
         .status(200)
         .setHeader('Content-Type', 'application/json')
-        .json({ success: true, msg: `deleted all foods`})
+        .json({ success: true, msg: `deleted all ingredients`})
     }
     catch (err) {
-        throw new Error(`Error deleting all quantity: ${err.message}`)
+        throw new Error(`Error deleting all ingredients: ${err.message}`)
     }
 }
 
+//! For '/:menuId/ingredients' endpoint
+//! For '/:menuId/ingredients/:ingredientId' startpoint
+
+const getMenuIngredient = async (req, res, next) => {
+    try {
+        const menu = await Menu.findById(req.params.menuId)
+        const ingredient = menu.ingredients.find(ingredient => (ingredient._id).equals(req.params.ingredientId))
+        if(!ingredient) {ingredient = {success:false, msg: `No ingredient found with ingredient id: ${req.params.ingredientId}`}}
+        res
+        .set(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(ingredient)
+
+    } catch (err) {
+        throw new Error (`Error retrieving ingredient with id: ${req.params.ingredientId}, ${err.message}`)
+    }
+}
+
+const updateMenuIngredient = async (req, res, next) => {
+    try {
+        const menu = await Menu.findById(req.params.menuId);
+        let ingredient = menu.ingredients.find(ingredient => (ingredient._id).equals(req.params.ingredientId))
+
+        if(ingredient) {
+            const ingredientIndexPosition = menu.ingredients.indexOf(ingredient)
+            menu.ingredients.splice(ingredientIndexPosition, 1, req.body);
+            ingredient = menu.ingredients[ingredientIndexPosition]
+            await menu.save();
+        }
+        else {
+            ingredient = {success: false, msg: `No ingredient found with the id: ${req.params.ingredientId}`}
+        }
+
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(ingredient);
+    }
+    catch (err) {
+        throw new Error (`Error updating menu with Id: ${req.params.ingredientId}:${err.message}`)
+    }
+}
+
+const deleteMenuIngredient = async (req, res, next) => {
+    try {
+    let menu = await Menu.findById(req.params.menuId);
+    let ingredient = menu.ingredients.find(ingredient => (ingredient._id).equals(req.params.ingredientId));
+        if (ingredient) {
+            const ingredientIndexPosition = menu.ingredients.indexOf(ingredient);
+            menu.ingredients.splice(ingredientIndexPosition, 1);
+            ingredient = {success: true, msg: `Ingredient with Id: ${req.params.ingredientId} deleted`}
+            await menu.save();
+
+        }
+        else {
+            ingredient = {success: false, msg: `No ingredient found with the id: ${req.params.ingredientId}`}
+        }
+
+    res
+    .status(200)
+    .setHeader('Content-Type', 'application/json')
+    .json(ingredient)
+
+    }
+    catch (err) {
+        throw new Error (`Error deleting ingredient with Id: ${req.params.ingredientId} : ${err.message}`)
+    }
+}
