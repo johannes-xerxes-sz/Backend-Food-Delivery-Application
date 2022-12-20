@@ -1,4 +1,4 @@
-# Backend Capstone Project
+# Backend Capstone Project [![Building status: In progress](https://img.shields.io/badge/start%20with-In%3F-brightgreen.svg?style=flat)](https://github.com/johannes-xerxes-sz/backend-capstone-final/)
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla urna nibh, gravida in lacus eget, iaculis sollicitudin neque. Aenean eget eros in leo blandit pellentesque non nec massa. 
 
