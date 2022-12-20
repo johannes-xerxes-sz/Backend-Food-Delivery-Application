@@ -234,15 +234,6 @@ const getCartFoods = async (req, res, next) => {
     try {
       const cart = await Cart.findById(req.params.cartId)
       const foods = cart.foods;
-  
-      // .populate({
-        //   path: 'foods', // populate the 'foods' field
-        //   model: 'Food', // specify the model for the 'foods' field
-        //   populate: {
-        //     path: 'ingredients', // populate the 'ingredients' sub-field
-        //     select: ['name'] // select only the 'name' field of the 'Ingredients' sub-schema
-        //   }
-        // });
       res
         .status(200)
         .setHeader('Content-Type', 'application/json')
@@ -256,27 +247,18 @@ const getCartFoods = async (req, res, next) => {
 
   const postCartFood = async (req, res, next) => {
     try {
-      const cart = await Cart.findById(req.params.cartId);
-      cart.foods.push(req.body);
-      await cart.save();
-  
-      const updatedCart = await Cart.findById(req.params.cartId)
-        .populate({
-          path: 'foods', // populate the 'foods' field
-          model: 'Food', // specify the model for the 'foods' field
-          populate: {
-            path: 'ingredients', // populate the 'ingredients' sub-field
-            select: ['name'] // select only the 'name' field of the 'Ingredients' sub-schema
-          }
-        });
+        const cart = await Cart.findById(req.params.cartId)
+        const result = await cart.save();
+        cart.foods.push(req.body)        
       res
         .status(201)
         .setHeader('Content-Type', 'application/json')
-        .json(updatedCart);
+        .json(result);
     } catch (err) {
       throw new Error(`Error posting a cart food: ${err.message}`);
     }
   };
+  
   
 
 const deleteCartFoods = async (req, res, next) => {

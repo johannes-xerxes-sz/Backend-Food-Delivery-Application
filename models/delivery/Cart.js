@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 const MapboxClient = require('mapbox');
 const Restaurant = require('./Restaurant')
+const Menu = require('./Menu')
 
 const QuantitySchema = new Schema ({
     toAdd: {
@@ -17,22 +18,18 @@ const QuantitySchema = new Schema ({
 })
 
 const FoodSchema = new Schema ({
-    menu: {
+    name: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     },
     ingredients: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu' // make an endpoint to retrieve a subschema from the backend then parse into getting that ingredients
+        type: String
     },
-    quantity: [QuantitySchema],
     description: {
-        type: String,
-        required: true
+        type: String
     },
     price: {
-        type: Number,
-        required: true
+        type: Number
     }
 
 }, {
@@ -74,8 +71,9 @@ const CartSchema = new Schema({
         default: false
     },
     foods: [FoodSchema],
+    quantity: [QuantitySchema],
     restaurant: {
-        type: Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'Restaurant'
     }
 }, {
@@ -114,8 +112,6 @@ CartSchema.pre('save', async function(next) {
     let lat1 = this.latitude
     let lat2 = restaurant.latitude
     let lon2 = restaurant.longitude
-    console.log(restaurant.latitude)
-    console.log(restaurant.longitude)
 
     function deg2rad(deg) {
         return deg * (Math.PI/180)
@@ -130,10 +126,14 @@ CartSchema.pre('save', async function(next) {
           Math.sin(dLon/2) * Math.sin(dLon/2); 
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         const d = R * c; // Distance in miles
-        console.log(d)
-        return this.deliveryCost = Math.ceil(d * 1.2);      
+        return this.deliveryCost = Math.round((d * 1.2)* 100)/100;      
 
 })
+
+CartSchema.pre('save', async function (next) {
+    let foods = await Menu.findById(this.foods.name)
+    console.log(foods)
+});
 
 
 module.exports = mongoose.model('Cart', CartSchema);
