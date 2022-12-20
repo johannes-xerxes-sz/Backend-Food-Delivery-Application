@@ -12,7 +12,13 @@ const {
     deleteMenuRatings,
     getMenuRating,
     updateMenuRating,
-    deleteMenuRating
+    deleteMenuRating,
+    getMenuIngredients,
+    postMenuIngredient,
+    deleteMenuIngredients,
+    getMenuIngredient,
+    updateMenuIngredient,
+    deleteMenuIngredient
 
 } = require('../../controllers/deliveryController/menuController');
 const reqRecievedLogger = require('../../middlewares/reqRecievedLogger')
@@ -41,6 +47,16 @@ router.route('/')
     .get(reqRecievedLogger, getMenuRating)
     .put(reqRecievedLogger, updateMenuRating)
     .delete(reqRecievedLogger, deleteMenuRating)
+
+    router.route('/:menuId/ingredients')
+    .get(reqRecievedLogger, getMenuIngredients)
+    .post(reqRecievedLogger, postMenuIngredient)
+    .delete(reqRecievedLogger, deleteMenuIngredients)
+    
+    router.route('/:menuId/ingredients/:ingredientId')
+    .get(reqRecievedLogger, getMenuIngredient)
+    .put(reqRecievedLogger, updateMenuIngredient)
+    .delete(reqRecievedLogger, deleteMenuIngredient)
 
 
     module.exports = router;
