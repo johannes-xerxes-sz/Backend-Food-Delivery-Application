@@ -8,6 +8,8 @@ const errorHandler = require('./middlewares/error');
 const restaurant = require('./routes/delivery/restaurant');
 const cart = require('./routes/delivery/cart');
 const menu = require('./routes/delivery/menu');
+const delivery = require('./routes/delivery/delivery');
+
 // const cart = require('./routes/delivery/cart');
 
 
@@ -39,6 +41,7 @@ app.use('/api/v1/cart', cart);
 app.use('/api/v1/menu', menu);
 app.use('/api/v1/restaurant', restaurant);
 app.use('/api/v1/user', user);
+app.use('/api/v1/delivery', delivery);
 
 app.use('/api/v1/payment', payment);
 

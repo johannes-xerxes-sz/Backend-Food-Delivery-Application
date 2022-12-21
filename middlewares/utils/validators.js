@@ -147,6 +147,28 @@ const paymentValidator = (req, res, next) => {
 //     }
 // }
 
+const deliveryValidator = (req, res, next) => { 
+    if (req.body) {
+        if (!req.body.cart || 
+            !req.body.restaurant || 
+            !req.body.user) {
+            res
+            .status(400)
+            .setHeader('Content-Type', 'text/plain')
+            .end('Missing Required Fields')
+
+        }
+        else {
+            next();
+        }
+
+    }
+    else {
+        res
+        .end(`Request for path: ${req.protocol} and method: ${req.method} is missing payload`);
+    }
+}
+
 module.exports = {
     userValidator,
     menuValidator,
@@ -154,5 +176,6 @@ module.exports = {
     paymentValidator,
     adminValidator,
     ownerValidator,
-    driverValidator
+    driverValidator,
+    deliveryValidator
 }

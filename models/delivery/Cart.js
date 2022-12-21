@@ -28,10 +28,10 @@ const FoodSchema = new Schema ({
     // description: {
     //     type: String
     // },
-    price: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu'
-    }
+    // price: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Menu'
+    // }
 
 }, {
     timestamps: true
