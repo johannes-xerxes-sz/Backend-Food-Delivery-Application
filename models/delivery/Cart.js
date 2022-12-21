@@ -22,14 +22,15 @@ const FoodSchema = new Schema ({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     },
-    ingredients: {
-        type: String
-    },
-    description: {
-        type: String
-    },
+    // ingredients: {
+    //     type: String
+    // },
+    // description: {
+    //     type: String
+    // },
     price: {
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
     }
 
 }, {
@@ -107,8 +108,13 @@ CartSchema.pre('save', async function (next) {
 
 CartSchema.pre('save', async function(next) {
     let restaurant = await Restaurant.findById(this.restaurant)
-
-    let lon1 = this.longitude
+    let totalPrice = 0
+    for (let food of this.foods) {
+        if (food.name.price) {
+            totalPrice = totalPrice + food.name.price
+        }
+    }
+    let lon1 = this.longitude 
     let lat1 = this.latitude
     let lat2 = restaurant.latitude
     let lon2 = restaurant.longitude
@@ -126,14 +132,10 @@ CartSchema.pre('save', async function(next) {
           Math.sin(dLon/2) * Math.sin(dLon/2); 
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         const d = R * c; // Distance in miles
-        return this.deliveryCost = Math.round((d * 1.2)* 100)/100;      
+        this.deliveryCost = Math.round((d * 1.2)* 100)/100; 
+        return this.totalPrice = totalPrice + this.deliveryCost     
+
 
 })
-
-CartSchema.pre('save', async function (next) {
-    let foods = await Menu.findById(this.foods.name)
-    console.log(foods)
-});
-
 
 module.exports = mongoose.model('Cart', CartSchema);

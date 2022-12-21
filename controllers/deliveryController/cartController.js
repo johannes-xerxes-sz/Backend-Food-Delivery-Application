@@ -232,7 +232,13 @@ const deleteCartFood = async (req, res, next) => {
 
 const getCartFoods = async (req, res, next) => {
     try {
-      const cart = await Cart.findById(req.params.cartId)
+      const cart = await Cart.findById(req.params.cartId)        
+      .populate(
+        {
+            path: 'foods.name',
+            select: ['name','restaurant','type','price']
+        }
+      )
       const foods = cart.foods;
       res
         .status(200)
@@ -247,9 +253,16 @@ const getCartFoods = async (req, res, next) => {
 
   const postCartFood = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId)
-        const result = await cart.save();
+        const cart = await Cart.findById(req.params.cartId)    
+        .populate(
+            {
+                path: 'foods.name',
+                select: ['name','restaurant','type','price']
+            }
+          )
         cart.foods.push(req.body)        
+        const result = await cart.save()
+
       res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -278,9 +291,9 @@ const deleteCartFoods = async (req, res, next) => {
 }
 
 //! For '/:cartId/foods' endpoint
-//! For '/:CartId/cart/:cartId/:quantityId' endpoint
+//! For '/:cartId/quantity' endpoint
 
-const getCartFoodQuantity = async (req, res, next) => {
+const getCartQuantity = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId)
         const quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
@@ -295,7 +308,7 @@ const getCartFoodQuantity = async (req, res, next) => {
     }
 }
 
-const updateCartFoodQuantity = async (req, res, next) => {
+const updateCartQuantity = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId);
         let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
@@ -320,7 +333,7 @@ const updateCartFoodQuantity = async (req, res, next) => {
     }
 }
 
-const deleteCartFoodQuantity = async (req, res, next) => {
+const deleteCartQuantity = async (req, res, next) => {
     try {
     let cart = await Cart.findById(req.params.cartId);
     let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId));
@@ -345,9 +358,9 @@ const deleteCartFoodQuantity = async (req, res, next) => {
         throw new Error (`Error deleting quantity with Id: ${req.params.quantityId} : ${err.message}`)
     }
 }
-//! For '/:cartId/foods' end point 
+//! For '/:cartId/quantity/:quantityId' end point 
 
-const getCartFoodQuantitys = async (req, res, next) => {
+const getCartQuantitys = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId);
         const foods = cart.foods.quantity;
@@ -363,7 +376,7 @@ const getCartFoodQuantitys = async (req, res, next) => {
     }
 }
 
-const postCartFoodQuantity = async (req, res, next) => {
+const postCartQuantity = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId);
         cart.foods.quantity.push(req.body);
@@ -379,7 +392,7 @@ const postCartFoodQuantity = async (req, res, next) => {
     }
 }
 
-const deleteCartFoodQuantitys = async (req, res, next) => {
+const deleteCartQuantitys = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId);
         cart.foods.quantity = [];
@@ -410,10 +423,10 @@ module.exports = {
     postCartFood,
     deleteCartFoods,
     
-    getCartFoodQuantity,
-    updateCartFoodQuantity,
-    deleteCartFoodQuantity,
-    getCartFoodQuantitys,
-    postCartFoodQuantity,
-    deleteCartFoodQuantitys
+    getCartQuantity,
+    updateCartQuantity,
+    deleteCartQuantity,
+    getCartQuantitys,
+    postCartQuantity,
+    deleteCartQuantitys
 }
