@@ -14,11 +14,11 @@ const getCarts = async (req, res, next) => {
         if (author) filter.author = true;
 
         if (limit) options.limit = limit;
-        if (sortByAge) {
-            options.sort = {
-              age: sortByAge === 'asc' ? 1 : -1
-            };
-          }
+        // if (sortByAge) {
+        //     options.sort = {
+        //       age: sortByAge === 'asc' ? 1 : -1
+        //     };
+        //   }
     }
 
     try { 
@@ -253,7 +253,7 @@ const getCartFoods = async (req, res, next) => {
 
   const postCartFood = async (req, res, next) => {
     try {
-        const cart = await Cart.findById(req.params.cartId)    
+        const cart = await (await Cart.findById(req.params.cartId))    
         .populate(
             {
                 path: 'foods.name',
@@ -261,7 +261,7 @@ const getCartFoods = async (req, res, next) => {
             }
           )
         cart.foods.push(req.body)        
-        const result = await cart.save()
+        const result = await cart.save() 
 
       res
         .status(201)
