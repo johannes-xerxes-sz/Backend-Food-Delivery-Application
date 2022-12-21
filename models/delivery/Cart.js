@@ -4,6 +4,7 @@ const validator = require('validator');
 const MapboxClient = require('mapbox');
 const Restaurant = require('./Restaurant')
 const Cart = require('./Cart')
+const Menu = require('./Menu')
 
 const FoodSchema = new Schema({
     menu: {
@@ -108,15 +109,13 @@ CartSchema.pre('save', async function(next) {
 
     let totalPrice = 0
     for (let food of this.foods) {
-        console.log(`food.menu.price`,food.menu.price)
 
         if (food.menu.price) {
             totalPrice = totalPrice + food.menu.price
+        } else {
+            const foodItem = await Menu.findById(food.menu)
+            totalPrice = totalPrice + foodItem.price
         }
-        console.log(`food.price`,food.price)
-        console.log(`totalPrice`,totalPrice)
-
-
     }    
     console.log(totalPrice)
     let lon1 = this.longitude 

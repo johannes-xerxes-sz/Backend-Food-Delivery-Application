@@ -236,7 +236,7 @@ const getCartFoods = async (req, res, next) => {
       .populate(
         {
             path: 'foods.menu',
-            select: ['name','restaurant','type','price']
+            select: 'name restaurant type price'
         }
       )
       const foods = cart.foods;
@@ -257,11 +257,14 @@ const getCartFoods = async (req, res, next) => {
   
       cart.foods.push(req.body);
       const result = await cart.save();
-  
+        console.log(`req.body details`,req.body)
+        console.log(`cart details`,cart)
+
       // Include the price field in the response
-      const price = result.foods[result.foods.length - 1].menu.price;
-      res.price = price;
-  
+    //   const price = result.foods[result.foods.length - 1].menu.price;
+    //   res.price = price;
+    //   console.log(price)
+
       res
         .status(201)
         .setHeader('Content-Type', 'application/json')
