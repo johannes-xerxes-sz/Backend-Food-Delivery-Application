@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 const MapboxClient = require('mapbox');
 const Restaurant = require('./Restaurant')
+const Cart = require('./Cart')
 
 const FoodSchema = new Schema({
     menu: {
@@ -96,21 +97,25 @@ CartSchema.pre('save', async function (next) {
 
 }) 
 
+
 CartSchema.pre('save', async function(next) {
     let restaurant = await Restaurant.findById(this.restaurant)
-    console.log(`niabot`)
     // const Cart = mongoose.model('Cart', CartSchema);
     // this.foods = await Cart.populate(this, 'foods.name', ['name', 'restaurant', 'type', 'price']);
-    
+    // this.foods = await Cart.populate(this, 'foods.name foods.price', ['name', 'price']);
+
     // console.log(this.foods)
+
     let totalPrice = 0
     for (let food of this.foods) {
-        console.log(this.foods.menu)
+        console.log(`food.menu.price`,food.menu.price)
 
-        if (food.price) {
-            totalPrice = totalPrice + food.price
+        if (food.menu.price) {
+            totalPrice = totalPrice + food.menu.price
         }
-        console.log(food.price)
+        console.log(`food.price`,food.price)
+        console.log(`totalPrice`,totalPrice)
+
 
     }    
     console.log(totalPrice)
@@ -134,9 +139,6 @@ CartSchema.pre('save', async function(next) {
         const d = R * c; // Distance in miles
         this.deliveryCost = Math.round((d * 1.2)* 100)/100; 
         return this.totalPrice = totalPrice + this.deliveryCost     
-        next();
-
-
 })
 
 module.exports = mongoose.model('Cart', CartSchema);
