@@ -253,14 +253,15 @@ const getCartFoods = async (req, res, next) => {
 
   const postCartFood = async (req, res, next) => {
     try {
-        
-        const cart = await Cart.findById(req.params.cartId)
-        // const cart= await  Cart.create(req.body)
-
-        cart.foods.push(req.body)        
-        const result = await cart.save()
-        console.log(result)
-
+      const cart = await Cart.findById(req.params.cartId).populate('foods.menu');
+  
+      cart.foods.push(req.body);
+      const result = await cart.save();
+  
+      // Include the price field in the response
+      const price = result.foods[result.foods.length - 1].menu.price;
+      res.price = price;
+  
       res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -269,6 +270,7 @@ const getCartFoods = async (req, res, next) => {
       throw new Error(`Error posting a cart food: ${err.message}`);
     }
   };
+  
   
   
 
