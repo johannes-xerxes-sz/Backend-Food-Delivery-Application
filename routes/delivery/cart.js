@@ -14,12 +14,12 @@ const {
     postCartFood,
     deleteCartFoods,
     
-    getCartQuantity,
-    updateCartQuantity,
-    deleteCartQuantity,
-    getCartQuantitys,
-    postCartQuantity,
-    deleteCartQuantitys
+    // getCartQuantity,
+    // updateCartQuantity,
+    // deleteCartQuantity,
+    // getCartQuantitys,
+    // postCartQuantity,
+    // deleteCartQuantitys
  
 } = require('../../controllers/deliveryController/cartController');
 const reqRecievedLogger  = require('../../middlewares/reqRecievedLogger')
@@ -49,14 +49,14 @@ router.route('/')
     .put(reqRecievedLogger, updateCartFood)
     .delete(reqRecievedLogger, deleteCartFood)
 
-    router.route('/:cartId/quantity')
-    .get(reqRecievedLogger, getCartQuantitys)
-    .post(reqRecievedLogger, postCartQuantity)
-    .delete(reqRecievedLogger, deleteCartQuantitys)
+    // router.route('/:cartId/quantity')
+    // .get(reqRecievedLogger, getCartQuantitys)
+    // .post(reqRecievedLogger, postCartQuantity)
+    // .delete(reqRecievedLogger, deleteCartQuantitys)
 
-    router.route('/:cartId/quantity/:quantityId')
-    .get(reqRecievedLogger, getCartQuantity)
-    .put(reqRecievedLogger, updateCartQuantity)
-    .delete(reqRecievedLogger, deleteCartQuantity)
+    // router.route('/:cartId/quantity/:quantityId')
+    // .get(reqRecievedLogger, getCartQuantity)
+    // .put(reqRecievedLogger, updateCartQuantity)
+    // .delete(reqRecievedLogger, deleteCartQuantity)
 
     module.exports = router;
