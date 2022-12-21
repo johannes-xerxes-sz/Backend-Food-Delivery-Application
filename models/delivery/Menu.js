@@ -53,8 +53,8 @@ const MenuSchema = new Schema({
         maxLength: 20
     },
     restaurant: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Restaurant'
     },    
     type: {
         type: String,

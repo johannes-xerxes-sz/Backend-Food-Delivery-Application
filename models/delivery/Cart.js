@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
 const MapboxClient = require('mapbox');
+const Restaurant = require('./Restaurant')
+const Menu = require('./Menu')
 
 const QuantitySchema = new Schema ({
     toAdd: {
@@ -16,22 +18,19 @@ const QuantitySchema = new Schema ({
 })
 
 const FoodSchema = new Schema ({
-    menu: {
+    name: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     },
-    ingredients: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Menu' // make an endpoint to retrieve a subschema from the backend then parse into getting that ingredients
-    },
-    quantity: [QuantitySchema],
-    description: {
-        type: String,
-        required: true
-    },
+    // ingredients: {
+    //     type: String
+    // },
+    // description: {
+    //     type: String
+    // },
     price: {
-        type: Number,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
     }
 
 }, {
@@ -46,12 +45,15 @@ const CartSchema = new Schema({
         required: true
     },    
     latitude: {
-        type: String
+        type: Number
     },
     longitude: {
-        type: String
+        type: Number
     },
     totalPrice: {  // plus distance cost
+        type: Number,
+    },    
+    deliveryCost: {  
         type: Number,
     },
     totalQuantity: {   
@@ -70,17 +72,16 @@ const CartSchema = new Schema({
         default: false
     },
     foods: [FoodSchema],
-    restaurant: [{
-        type: Schema.Types.ObjectId, 
+    quantity: [QuantitySchema],
+    restaurant: {
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'Restaurant'
-    }]
-
+    }
 }, {
     timestamps: true
 })
 
-/* CartSchema.pre('save', async function (next) {
-
+CartSchema.pre('save', async function (next) {
     // for the latitude and longitude
     const privateKey = process.env.LOCATION_API_KEY;
     const client = new MapboxClient(privateKey);
@@ -103,40 +104,38 @@ const CartSchema = new Schema({
     });
     return geocodePromise;
 
+}) 
 
-}) */
+CartSchema.pre('save', async function(next) {
+    let restaurant = await Restaurant.findById(this.restaurant)
+    let totalPrice = 0
+    for (let food of this.foods) {
+        if (food.name.price) {
+            totalPrice = totalPrice + food.name.price
+        }
+    }
+    let lon1 = this.longitude 
+    let lat1 = this.latitude
+    let lat2 = restaurant.latitude
+    let lon2 = restaurant.longitude
 
-CartSchema.pre('save', async function (next) {
-    const cart = this;
-    const privateKey = process.env.LOCATION_API_KEY;
-    const client = new MapboxClient(privateKey);
-  
-    client.geocodeForward(this.address, async (err, data) => {
-      if (err) {
-        return next(err);
+    function deg2rad(deg) {
+        return deg * (Math.PI/180)
       }
-      this.latitude = data.features[0].geometry.coordinates[1];
-      this.longitude = data.features[0].geometry.coordinates[0];
-  
-      function haversineDistance(lat1, lon1, lat2, lon2) {
-        // Haversine formula implementation goes here (see previous answer for example)
-      }
-  
-      // Calculate distance between the restaurant's latitude and longitude and the user's latitude and longitude
-      const distance = haversineDistance(cart.restaurant.latitude, cart.restaurant.longitude, this.latitude, this.longitude);
-  
-      // Convert distance from meters to kilometers
-      const distanceInKm = distance / 1000;
-  
-      // Calculate charge based on distanceInKm
-      const totalDistanceCharge = distanceInKm * 0.50; // charge $0.50 per kilometer
-  
-      // Save the totalDistanceCharge to the totalDistanceCharge field of the cart object
-      cart.totalDistanceCharge = totalDistanceCharge;
-  
-      next();
-    });
-  });
-  
+
+        const R = 3959; // Radius of the Earth in miles
+        const dLat = deg2rad(lat2-lat1);  // deg2rad below
+        const dLon = deg2rad(lon2-lon1); 
+        const a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2); 
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        const d = R * c; // Distance in miles
+        this.deliveryCost = Math.round((d * 1.2)* 100)/100; 
+        return this.totalPrice = totalPrice + this.deliveryCost     
+
+
+})
 
 module.exports = mongoose.model('Cart', CartSchema);

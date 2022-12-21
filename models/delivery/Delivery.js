@@ -3,11 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 
 
-const DeliverySchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },     
+const DeliverySchema = new Schema({  
     cart: [{
         type: Schema.Types.ObjectId, 
         ref: 'Cart'
