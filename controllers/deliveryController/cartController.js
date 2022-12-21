@@ -235,7 +235,7 @@ const getCartFoods = async (req, res, next) => {
       const cart = await Cart.findById(req.params.cartId)        
       .populate(
         {
-            path: 'foods.name',
+            path: 'foods.menu',
             select: ['name','restaurant','type','price']
         }
       )
@@ -253,16 +253,15 @@ const getCartFoods = async (req, res, next) => {
 
   const postCartFood = async (req, res, next) => {
     try {
-        const cart = await (await Cart.findById(req.params.cartId))    
-        .populate(
-            {
-                path: 'foods.name',
-                select: ['name','restaurant','type','price']
-            }
-          )
-        cart.foods.push(req.body)        
-        const result = await cart.save() 
-
+      const cart = await Cart.findById(req.params.cartId).populate('foods.menu');
+  
+      cart.foods.push(req.body);
+      const result = await cart.save();
+  
+      // Include the price field in the response
+      const price = result.foods[result.foods.length - 1].menu.price;
+      res.price = price;
+  
       res
         .status(201)
         .setHeader('Content-Type', 'application/json')
@@ -271,6 +270,7 @@ const getCartFoods = async (req, res, next) => {
       throw new Error(`Error posting a cart food: ${err.message}`);
     }
   };
+  
   
   
 
@@ -293,120 +293,120 @@ const deleteCartFoods = async (req, res, next) => {
 //! For '/:cartId/foods' endpoint
 //! For '/:cartId/quantity' endpoint
 
-const getCartQuantity = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId)
-        const quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
-        if(!quantity) {quantity = {success:false, msg: `No quantity found with quantity id: ${req.params.quantityId}`}}
-        res
-        .set(200)
-        .setHeader('Content-Type', 'application/json')
-        .json(quantity)
+// const getCartQuantity = async (req, res, next) => {
+//     try {
+//         const cart = await Cart.findById(req.params.cartId)
+//         const quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
+//         if(!quantity) {quantity = {success:false, msg: `No quantity found with quantity id: ${req.params.quantityId}`}}
+//         res
+//         .set(200)
+//         .setHeader('Content-Type', 'application/json')
+//         .json(quantity)
 
-    } catch (err) {
-        throw new Error (`Error retrieving quantity with id: ${req.params.quantityId}, ${err.message}`)
-    }
-}
+//     } catch (err) {
+//         throw new Error (`Error retrieving quantity with id: ${req.params.quantityId}, ${err.message}`)
+//     }
+// }
 
-const updateCartQuantity = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
+// const updateCartQuantity = async (req, res, next) => {
+//     try {
+//         const cart = await Cart.findById(req.params.cartId);
+//         let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId))
 
-        if(quantity) {
-            const quantityIndexPosition = cart.foods.quantity.indexOf(quantity)
-            cart.foods.quantity.splice(quantityIndexPosition, 1, req.body);
-            quantity = cart.foods.quantity[foodIndexPosition]
-            await cart.save();
-        }
-        else {
-            quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
-        }
+//         if(quantity) {
+//             const quantityIndexPosition = cart.foods.quantity.indexOf(quantity)
+//             cart.foods.quantity.splice(quantityIndexPosition, 1, req.body);
+//             quantity = cart.foods.quantity[foodIndexPosition]
+//             await cart.save();
+//         }
+//         else {
+//             quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
+//         }
 
-        res
-        .status(200)
-        .setHeader('Content-Type', 'application/json')
-        .json(quantity);
-    }
-    catch (err) {
-        throw new Error (`Error updating cart with Id: ${req.params.quantityId}:${err.message}`)
-    }
-}
+//         res
+//         .status(200)
+//         .setHeader('Content-Type', 'application/json')
+//         .json(quantity);
+//     }
+//     catch (err) {
+//         throw new Error (`Error updating cart with Id: ${req.params.quantityId}:${err.message}`)
+//     }
+// }
 
-const deleteCartQuantity = async (req, res, next) => {
-    try {
-    let cart = await Cart.findById(req.params.cartId);
-    let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId));
-        if (quantity) {
-            const foodIndexPosition = cart.foods.quantity.indexOf(quantity);
-            cart.foods.quantity.splice(foodIndexPosition, 1);
-            quantity = {success: true, msg: `quantity with Id: ${req.params.quantityId} deleted`}
-            await cart.save();
+// const deleteCartQuantity = async (req, res, next) => {
+//     try {
+//     let cart = await Cart.findById(req.params.cartId);
+//     let quantity = cart.foods.quantity.find(quantity => (quantity._id).equals(req.params.quantityId));
+//         if (quantity) {
+//             const foodIndexPosition = cart.foods.quantity.indexOf(quantity);
+//             cart.foods.quantity.splice(foodIndexPosition, 1);
+//             quantity = {success: true, msg: `quantity with Id: ${req.params.quantityId} deleted`}
+//             await cart.save();
 
-        }
-        else {
-            quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
-        }
+//         }
+//         else {
+//             quantity = {success: false, msg: `No quantity found with the id: ${req.params.quantityId}`}
+//         }
 
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json(quantity)
+//     res
+//     .status(200)
+//     .setHeader('Content-Type', 'application/json')
+//     .json(quantity)
 
-    }
-    catch (err) {
-        throw new Error (`Error deleting quantity with Id: ${req.params.quantityId} : ${err.message}`)
-    }
-}
-//! For '/:cartId/quantity/:quantityId' end point 
+//     }
+//     catch (err) {
+//         throw new Error (`Error deleting quantity with Id: ${req.params.quantityId} : ${err.message}`)
+//     }
+// }
+// //! For '/:cartId/quantity/:quantityId' end point 
 
-const getCartQuantitys = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        const foods = cart.foods.quantity;
+// const getCartQuantitys = async (req, res, next) => {
+//     try {
+//         const cart = await Cart.findById(req.params.cartId);
+//         const foods = cart.foods.quantity;
 
-        res
-        .status(200)
-        .setHeader('Content-Type', 'application/json')
-        .json(foods)
+//         res
+//         .status(200)
+//         .setHeader('Content-Type', 'application/json')
+//         .json(foods)
 
-    }
-    catch (err) {
-        throw new Error (`Error retrieving all foods: ${err.message}`)
-    }
-}
+//     }
+//     catch (err) {
+//         throw new Error (`Error retrieving all foods: ${err.message}`)
+//     }
+// }
 
-const postCartQuantity = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        cart.foods.quantity.push(req.body);
+// const postCartQuantity = async (req, res, next) => {
+//     try {
+//         const cart = await Cart.findById(req.params.cartId);
+//         cart.foods.quantity.push(req.body);
         
-        const result = await cart.save();
-        res
-        .status(201) //need_clarify
-        .setHeader('Content-Type', 'application/json')
-        .json(result)
-    }
-    catch (err) {
-        throw new Error(`Error posting a cart quantity: ${err.message}`)
-    }
-}
+//         const result = await cart.save();
+//         res
+//         .status(201) //need_clarify
+//         .setHeader('Content-Type', 'application/json')
+//         .json(result)
+//     }
+//     catch (err) {
+//         throw new Error(`Error posting a cart quantity: ${err.message}`)
+//     }
+// }
 
-const deleteCartQuantitys = async (req, res, next) => {
-    try {
-        const cart = await Cart.findById(req.params.cartId);
-        cart.foods.quantity = [];
-        await cart.save();
+// const deleteCartQuantitys = async (req, res, next) => {
+//     try {
+//         const cart = await Cart.findById(req.params.cartId);
+//         cart.foods.quantity = [];
+//         await cart.save();
 
-        res
-        .status(200)
-        .setHeader('Content-Type', 'application/json')
-        .json({ success: true, msg: `deleted all foods`})
-    }
-    catch (err) {
-        throw new Error(`Error deleting all quantity: ${err.message}`)
-    }
-}
+//         res
+//         .status(200)
+//         .setHeader('Content-Type', 'application/json')
+//         .json({ success: true, msg: `deleted all foods`})
+//     }
+//     catch (err) {
+//         throw new Error(`Error deleting all quantity: ${err.message}`)
+//     }
+// }
 
 
 module.exports = {
@@ -423,10 +423,10 @@ module.exports = {
     postCartFood,
     deleteCartFoods,
     
-    getCartQuantity,
-    updateCartQuantity,
-    deleteCartQuantity,
-    getCartQuantitys,
-    postCartQuantity,
-    deleteCartQuantitys
+    // getCartQuantity,
+    // updateCartQuantity,
+    // deleteCartQuantity,
+    // getCartQuantitys,
+    // postCartQuantity,
+    // deleteCartQuantitys
 }

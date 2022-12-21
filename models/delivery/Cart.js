@@ -3,41 +3,18 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 const MapboxClient = require('mapbox');
 const Restaurant = require('./Restaurant')
-const Menu = require('./Menu')
+const Cart = require('./Cart')
 
-const QuantitySchema = new Schema ({
-    toAdd: {
-        type: String,
-    },
-    toRemove: {
-        type: String,
-    }
-
-}, {
-    timestamps: true
-})
-
-const FoodSchema = new Schema ({
-    name: {
+const FoodSchema = new Schema({
+    menu: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
-    },
-    // ingredients: {
-    //     type: String
-    // },
-    // description: {
-    //     type: String
-    // },
-    // price: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Menu'
-    // }
+    }
 
-}, {
+},{
     timestamps: true
-})
-
-
+}
+)
 
 const CartSchema = new Schema({
     address: {
@@ -72,7 +49,10 @@ const CartSchema = new Schema({
         default: false
     },
     foods: [FoodSchema],
-    quantity: [QuantitySchema],
+    // quantity:  [{
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Menu'
+    // }],
     restaurant: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Restaurant'
@@ -81,7 +61,18 @@ const CartSchema = new Schema({
     timestamps: true
 })
 
+// CartSchema.pre('save', async function(next) {
+//     // populate the foods.name field
+//     this.foods = await Cart.populate(this, 'foods.name', ['name', 'restaurant', 'type', 'price']);
+//     next();
+
+//   });
+  
+  
+  
 CartSchema.pre('save', async function (next) {
+
+    
     // for the latitude and longitude
     const privateKey = process.env.LOCATION_API_KEY;
     const client = new MapboxClient(privateKey);
@@ -106,14 +97,28 @@ CartSchema.pre('save', async function (next) {
 
 }) 
 
+
 CartSchema.pre('save', async function(next) {
     let restaurant = await Restaurant.findById(this.restaurant)
+    // const Cart = mongoose.model('Cart', CartSchema);
+    // this.foods = await Cart.populate(this, 'foods.name', ['name', 'restaurant', 'type', 'price']);
+    // this.foods = await Cart.populate(this, 'foods.name foods.price', ['name', 'price']);
+
+    // console.log(this.foods)
+
     let totalPrice = 0
     for (let food of this.foods) {
-        if (food.name.price) {
-            totalPrice = totalPrice + food.name.price
+        console.log(`food.menu.price`,food.menu.price)
+
+        if (food.menu.price) {
+            totalPrice = totalPrice + food.menu.price
         }
-    }
+        console.log(`food.price`,food.price)
+        console.log(`totalPrice`,totalPrice)
+
+
+    }    
+    console.log(totalPrice)
     let lon1 = this.longitude 
     let lat1 = this.latitude
     let lat2 = restaurant.latitude
@@ -134,8 +139,6 @@ CartSchema.pre('save', async function(next) {
         const d = R * c; // Distance in miles
         this.deliveryCost = Math.round((d * 1.2)* 100)/100; 
         return this.totalPrice = totalPrice + this.deliveryCost     
-
-
 })
 
 module.exports = mongoose.model('Cart', CartSchema);
