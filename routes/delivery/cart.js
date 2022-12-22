@@ -13,6 +13,8 @@ const {
     getCartFoods,
     postCartFood,
     deleteCartFoods,
+    getPayments,
+    postPayment
     
     // getCartQuantity,
     // updateCartQuantity,
@@ -24,7 +26,8 @@ const {
 } = require('../../controllers/deliveryController/cartController');
 const reqRecievedLogger  = require('../../middlewares/reqRecievedLogger')
 // const {cartValidator} = require('../middlewares/utils/validators')
- 
+const {paymentValidator} = require('../../middlewares/utils/validators')
+
 
 //root
 
@@ -49,6 +52,10 @@ router.route('/')
     .put(reqRecievedLogger, updateCartFood)
     .delete(reqRecievedLogger, deleteCartFood)
 
+    router.route('/:cartId/payment')
+    .get(reqRecievedLogger, getPayments)
+    .post(reqRecievedLogger, paymentValidator, postPayment)
+    
     // router.route('/:cartId/quantity')
     // .get(reqRecievedLogger, getCartQuantitys)
     // .post(reqRecievedLogger, postCartQuantity)

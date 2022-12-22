@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
 const {
     getDeliverys,
     postDelivery,
     deleteDeliverys,
     getDelivery,
     updateDelivery,
-    deleteDelivery,
+    deleteDelivery
 } = require('../../controllers/deliveryController/deliveryController');
 const reqRecievedLogger = require('../../middlewares/reqRecievedLogger')
 // const {deliveryValidator} = require('../../middlewares/utils/validators')
- 
+
 
 //root
 
