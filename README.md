@@ -30,7 +30,21 @@ Finally, the program may include a live location feature that allows users to tr
 <br/>
 <div align="center">
 <kbd>
-<img src="./profile.JPG">
+<img src="./Screen Shot 2022-12-22 at 4.19.00 PM.png">
+</kbd>
+</div>
+
+<br/>
+<div align="center">
+<kbd>
+<img src="./Screen Shot 2022-12-22 at 4.18.55 PM.png">
+</kbd>
+</div>
+
+<br/>
+<div align="center">
+<kbd>
+<img src="./Screen Shot 2022-12-22 at 4.18.29 PM (2).png">
 </kbd>
 </div>
 
