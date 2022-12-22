@@ -5,6 +5,7 @@ Food Delivery Backend Application
 ## Table of contents
 * [General info](#general-info)
 * [Project Demo](#project-demo)
+* [Project Postman Documentation](#project-postman-documentation)
 * [Project Video](#project-video)
 * [Technologies](#technologies)
 * [Setup](#setup)
@@ -35,6 +36,9 @@ Finally, the program may include a live location feature that allows users to tr
 
 ## Project Demo 
 [Click to view demo video](https://youtube.com)
+
+## Project Postman Documentation 
+[Click to view documentation](https://youtube.com)
 
 ## Project Video
 [Click to view demo of BugView](https://youtube.com)
