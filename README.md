@@ -16,7 +16,6 @@ Food Delivery Backend Application
 ## General info
 A backend application program with the listed features would likely be a web-based application that allows users to perform create, read, update, and delete (CRUD) operations on information related to food, restaurants, and menus. This could include creating and updating listings for different types of food, restaurants, and menus, as well as deleting outdated or inaccurate information.
 The program may also include integration with the Stripe payment system, which would allow users to make payments through the application using various payment methods.
-In addition, the program may include a feature that allows users to check the weather in a particular location, using data from a weather API or other source.
 Finally, the program may include a live location feature that allows users to track their location in real-time, either through GPS or other location tracking technologies. This could be useful for a variety of purposes, such as tracking the location of delivery drivers or helping users find their way to a particular restaurant.
 
 <div align="center">Welcome to Food Delivery Backend Application! </div>
@@ -35,7 +34,7 @@ Finally, the program may include a live location feature that allows users to tr
 </div>
 
 ## Project Demo 
-[Click to view video demo]([https://bug-view.herokuapp.com/login](https://youtube.com))
+[Click to view demo video](https://youtube.com)
 
 ## Project Video
 [Click to view demo of BugView](https://youtube.com)
@@ -47,8 +46,19 @@ Finally, the program may include a live location feature that allows users to tr
 * Express-Validator - version 6.6.1
 * Config - version 3.3.2
 * JWT - version 8.5.1
-* Mongoose - version 5.10.0
-* Request - version 2.88.2
+* bcryptjs - 2.4.3",
+* cors - 2.8.5
+* dotenv - 16.0.3
+* ejs - 3.1.8
+* express - 4.18.2
+* helmet - 6.0.2
+* hpp - 0.2.3
+* mapbox-gl -2.11.1 
+* mongodb - 4.12.1
+* mongoose - 6.8.0
+* morgan - 1.10.0
+* stripe - 11.3.0
+* validator - 13.7.0
 
 ## Setup
 To try out this project: 
@@ -63,18 +73,35 @@ To try out this project:
   $ npx nodemon server 
 
 ## Code Examples
-### Node.js/Express.js
-```Node
+### delivery/cartController.js
+```
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    const cart = await Cart.findById(req.params.cartId);
+    const payment = await stripe.charges.create(req.body);
+     const {
+      amount,
+      currency,
+      source,
+      description
+  }= payment
+  cart.payment.push(req.body);
 
+  let charge = await Payment.create({
+      amount,
+      currency,
+      source: source.brand,
+      description
+  });
+   charge = await cart.save();
 ```
 
 
 ## Features
-* Full stack web application utilizing: MongoDB, Express.js, React, Stripe, mapbox, jwt, openweather, and Node.js. 
+* Backend stack web application utilizing: MongoDB, Express.js, React, Stripe, mapbox, jwt, openweather, and Node.js. 
 
 
 ## Status
-Project is: finished on the backend side but needed to add for the additional models .
+Project is: finished on the backend foundation but I will add the future the functioning foundations for meal planner, local tracker, and community produce.
 
 ## Inspiration
 I am on a journey to create a software program that will make a real impact in the world, and I am driven by my love of food. Whether I am cooking a delicious meal or building a software program, I am always striving to create something special. I know that building a software program is like building a puzzle, and it's up to me to bring all the pieces together. I stay focused, stay true to my vision, and never give up. I know that with hard work, dedication, and a little bit of inspiration, I can achieve anything I set my mind to, even if it's just cooking the perfect meal.
