@@ -1,5 +1,51 @@
 const Cart = require("../../models/delivery/Cart");
 
+//! for /payment endpoint
+
+const getPayments = async (req, res, next) => {
+
+  try {
+    const cart = await Cart.findById(req.params.cartId) 
+    const foods = cart.foods;
+    res
+      .status(200)
+      .setHeader('Content-Type', 'application/json')
+      .json(foods);
+  } catch (err) {
+    throw new Error(`Error retrieving all payments: ${err.message}`);
+  }
+};
+
+const postPayment = async (req, res, next) => {
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+  try {
+  const payment = await stripe.charges.create(req.body);
+  const {
+      amount,
+      currency,
+      source,
+      description,
+  }= payment
+
+  const charge = await Cart.create({
+      amount,
+      currency,
+      source: source.brand,
+      description,
+  });
+      res
+      .status(201)
+      .setHeader('Content-Type', 'application/json')
+      .json(charge)
+  }
+  catch (err)
+  {
+      throw new Error(`Error deleting Payment: ${err.message}`);
+  }
+}
+
+
 const getCarts = async (req, res, next) => {
 
     const filter = {};
@@ -156,7 +202,10 @@ const getCartFood = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId)
         const food = cart.foods.find(food => (food._id).equals(req.params.foodId))
+        console.log('CART foods',cart.foods._id)
+
         if(!food) {food = {success:false, msg: `No food found with food id: ${req.params.foodId}`}}
+
         res
         .set(200)
         .setHeader('Content-Type', 'application/json')
@@ -257,8 +306,8 @@ const getCartFoods = async (req, res, next) => {
   
       cart.foods.push(req.body);
       const result = await cart.save();
-        console.log(`req.body details`,req.body)
-        console.log(`cart details`,cart)
+        // console.log(`req.body details`,req.body)
+        // console.log(`cart details`,cart)
 
       // Include the price field in the response
     //   const price = result.foods[result.foods.length - 1].menu.price;
@@ -425,6 +474,9 @@ module.exports = {
     getCartFoods,
     postCartFood,
     deleteCartFoods,
+
+    getPayments,
+    postPayment
     
     // getCartQuantity,
     // updateCartQuantity,

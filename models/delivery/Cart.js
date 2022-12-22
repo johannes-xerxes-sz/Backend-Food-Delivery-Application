@@ -17,6 +17,34 @@ const FoodSchema = new Schema({
 }
 )
 
+const PaymentSchema = new Schema({
+    // cart: {
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Cart'
+    // },
+    amount: {  
+        type: Number,
+        required: true
+    },
+    currency: {  
+        type: String,
+        required: true
+    },     
+    source: {  
+        type: String,
+        required: true
+    },     
+    description: {  
+        type: String,
+        required: true
+    }
+
+
+}, {
+    timestamps: true
+}
+);
+
 const CartSchema = new Schema({
     address: {
         type: String,
@@ -57,7 +85,8 @@ const CartSchema = new Schema({
     restaurant: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Restaurant'
-    }
+    },
+    payment: [PaymentSchema]
 }, {
     timestamps: true
 })

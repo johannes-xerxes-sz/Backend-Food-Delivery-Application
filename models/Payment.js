@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 
 const PaymentSchema = new Schema({
+    // cart: {
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Cart'
+    // },
     amount: {  
         type: Number,
         required: true
