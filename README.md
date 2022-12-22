@@ -23,7 +23,7 @@ Finally, the program may include a live location feature that allows users to tr
 <br/>
 <div align="center">
 <kbd>
-<img src="./Capture.JPG">
+<img src="./Capture.jpg">
 </kbd>
 </div>
 
