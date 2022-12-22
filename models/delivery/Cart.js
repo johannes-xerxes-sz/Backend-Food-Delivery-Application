@@ -46,7 +46,6 @@ const PaymentSchema = new Schema({
 const CartSchema = new Schema({
     address: {
         type: String,
-        required: true
     },    
     latitude: {
         type: Number
