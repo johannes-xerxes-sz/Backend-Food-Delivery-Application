@@ -11,7 +11,6 @@ const FoodSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     }
-
 },{
     timestamps: true
 }
@@ -34,11 +33,10 @@ const PaymentSchema = new Schema({
         type: String,
         required: true
     },     
-    description: {  
+    description: {
         type: String,
         required: true
     }
-
 
 }, {
     timestamps: true

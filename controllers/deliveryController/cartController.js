@@ -4,17 +4,44 @@ const Cart = require("../../models/delivery/Cart");
 
 const getPayments = async (req, res, next) => {
 
+  const filter = {};
+  const options = {};
+  if(Object.keys(req.query).length){
+      // query parameter
+      const {
+          amount,
+          currency,
+          source,
+          description,
+          sortByAmount
+      } = req.query
+
+      if(amount) filter.amount = true
+      if(currency) filter.currency = true
+      if(source) filter.source = true
+      if(description) filter.description = true
+
+
+      if(limit) options.limit = limit
+      if (sortByAmount) {
+          options.sort = {
+            amount: sortByAmount === 'asc' ? 1 : -1
+          };
+        }
+  }
+
   try {
-    const cart = await Cart.findById(req.params.cartId) 
-    const foods = cart.foods;
-    res
+      const payment = await Cart.find({ }, filter, options)
+      res
       .status(200)
       .setHeader('Content-Type', 'application/json')
-      .json(foods);
+      .json(payment)
+
   } catch (err) {
-    throw new Error(`Error retrieving all payments: ${err.message}`);
+      throw new Error(`Error retrieving all payment: ${err.message}`)
   }
-};
+  
+}
 
 const postPayment = async (req, res, next) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -41,10 +68,9 @@ const postPayment = async (req, res, next) => {
   }
   catch (err)
   {
-      throw new Error(`Error deleting Payment: ${err.message}`);
+      throw new Error(`Error posting Payment: ${err.message}`);
   }
 }
-
 
 const getCarts = async (req, res, next) => {
 
@@ -129,8 +155,6 @@ const deleteCarts = async (req, res, next) => {
         throw new Error(`Error retrieving cart:${err.message}`)
                 }
             }
-
-
 //! For /:CartID endpoint: 
 
 const getCart = async (req, res, next) => {
@@ -196,15 +220,17 @@ const deleteCart = async (req, res, next) => {
     }
 }
 
-//! For '/:CartId/cart/:cartId' startpoint
+//! For '/:CartId/cart/:cartId/foods
 
 const getCartFood = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId)
-        const food = cart.foods.find(food => (food._id).equals(req.params.foodId))
-        console.log('CART foods',cart.foods._id)
+        // console.log('CART',cart)
 
-        if(!food) {food = {success:false, msg: `No food found with food id: ${req.params.foodId}`}}
+        const food = cart.foods.find(food => (food._id).equals(req.params.foodsId))
+        // console.log('CART foods',cart.foods._id)
+
+        if(!food) {food = {success:false, msg: `No food found with food id: ${req.params.foodsId}`}}
 
         res
         .set(200)
@@ -212,7 +238,7 @@ const getCartFood = async (req, res, next) => {
         .json(food)
 
     } catch (err) {
-        throw new Error (`Error retrieving food with id: ${req.params.foodId}, ${err.message}`)
+        throw new Error (`Error retrieving food with id: ${req.params.foodsId}, ${err.message}`)
     }
 }
 
@@ -229,7 +255,7 @@ const updateCartFood = async (req, res, next) => {
               select: ['name', 'address','latitude','longitude']
             }
           ]);
-        let food = cart.foods.find(food => (food._id).equals(req.params.foodId))
+        let food = cart.foods.find(food => (food._id).equals(req.params.foodsId))
 
         if(food) {
             const foodIndexPosition = cart.foods.indexOf(food)
@@ -238,7 +264,7 @@ const updateCartFood = async (req, res, next) => {
             await cart.save();
         }
         else {
-            food = {success: false, msg: `No food found with the id: ${req.params.foodId}`}
+            food = {success: false, msg: `No food found with the id: ${req.params.foodsId}`}
         }
 
         res
@@ -247,23 +273,23 @@ const updateCartFood = async (req, res, next) => {
         .json(food);
     }
     catch (err) {
-        throw new Error (`Error updating cart with Id: ${req.params.foodId}:${err.message}`)
+        throw new Error (`Error updating cart with Id: ${req.params.foodsId}:${err.message}`)
     }
 }
 
 const deleteCartFood = async (req, res, next) => {
     try {
     let cart = await Cart.findById(req.params.cartId);
-    let food = cart.foods.find(food => (food._id).equals(req.params.foodId));
+    let food = cart.foods.find(food => (food._id).equals(req.params.foodsId));
         if (food) {
             const foodIndexPosition = cart.foods.indexOf(food);
             cart.foods.splice(foodIndexPosition, 1);
-            food = {success: true, msg: `food with Id: ${req.params.foodId} deleted`}
+            food = {success: true, msg: `food with Id: ${req.params.foodsId} deleted`}
             await cart.save();
 
         }
         else {
-            food = {success: false, msg: `No food found with the id: ${req.params.foodId}`}
+            food = {success: false, msg: `No food found with the id: ${req.params.foodsId}`}
         }
 
     res

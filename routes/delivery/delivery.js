@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const {
     getDeliverys,
     postDelivery,
@@ -11,7 +10,7 @@ const {
 } = require('../../controllers/deliveryController/deliveryController');
 const reqRecievedLogger = require('../../middlewares/reqRecievedLogger')
 // const {deliveryValidator} = require('../../middlewares/utils/validators')
- 
+
 
 //root
 
