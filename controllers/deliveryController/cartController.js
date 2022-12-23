@@ -226,16 +226,6 @@ const getCartFood = async (req, res, next) => {
 const updateCartFood = async (req, res, next) => {
     try {
         const cart = await Cart.findById(req.params.cartId)        
-        .populate([
-            {
-              path: 'author',
-              select: ['userName','address','latitude','longitude']
-            },
-            {
-              path: 'restaurant',
-              select: ['name', 'address','latitude','longitude']
-            }
-          ]);
         let food = cart.foods.find(food => (food._id).equals(req.params.foodsId))
 
         if(food) {
