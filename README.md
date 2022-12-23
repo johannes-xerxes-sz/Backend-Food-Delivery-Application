@@ -1,4 +1,4 @@
-# Food Delivery Backend Application  [![Building status: In progress](https://img.shields.io/badge/Building%20status:-In%20Progress-brightgreen.svg?style=flat)](https://github.com/johannes-xerxes-sz/backend-capstone-final/)
+# Food Delivery Backend Application  [![Building status: In progress](https://img.shields.io/badge/Building%20status:-Stable%20No%20Validation-brightgreen.svg?style=flat)](https://github.com/johannes-xerxes-sz/backend-capstone-final/)
 
 Food Delivery Backend Application 
 
