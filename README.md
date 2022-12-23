@@ -119,7 +119,16 @@ To try out this project:
 
 
 ## Status
-Project is: finished on the backend foundation but I will add the future the functioning foundations for meal planner, local tracker, and community produce.
+Project is: finished on the backend foundation minor optimazation and features on
+* Weather status.
+* Exporting render for a sample website.
+
+
+add the major functions in the future:
+* Meal planner.
+* Local tracker.
+* Community produce.
+* Try to add a front end function
 
 ## Inspiration
 I am on a journey to create a software program that will make a real impact in the world, and I am driven by my love of food. Whether I am cooking a delicious meal or building a software program, I am always striving to create something special. I know that building a software program is like building a puzzle, and it's up to me to bring all the pieces together. I stay focused, stay true to my vision, and never give up. I know that with hard work, dedication, and a little bit of inspiration, I can achieve anything I set my mind to, even if it's just cooking the perfect meal.
