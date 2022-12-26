@@ -101,29 +101,6 @@ UserSchema.pre('save',  function (next) {
 
 UserSchema.pre('save', async function (next) {
 
-    const privateKey = process.env.LOCATION_API_KEY;
-    const client = new MapboxClient(privateKey);
-    const geocodePromise = new Promise((resolve, reject) => {
-        client.geocodeForward(this.address, async (err, data) => {
-            if (err) {
-                reject(err);
-            }
-            this.latitude = data.features[0].geometry.coordinates[1];
-            this.longitude = data.features[0].geometry.coordinates[0];
-            console.log(this.latitude)
-    
-            resolve();
-        })
-    })
-    
-    geocodePromise.then(() => {
-     this.longitude = this.longitude
-     this.latitude = this.latitude
-    console.log(this.latitude)
-    })
-    return geocodePromise;
-    console.log('undefined', this.latitude) // undefined
-
 if (!this.isModified('password'))
  next();
 const salt = await bcrypt.genSalt(10);
@@ -146,6 +123,30 @@ this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest(
 this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
 return resetToken;
 }
+
+UserSchema.pre('save', async function() {
+    const privateKey = process.env.LOCATION_API_KEY;
+    const client = new MapboxClient(privateKey);
+    const geocodePromise = new Promise((resolve, reject) => {
+        client.geocodeForward(this.address, async (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            this.latitude = data.features[0].geometry.coordinates[1];
+            this.longitude = data.features[0].geometry.coordinates[0];
+            console.log(this.latitude)
+    
+            resolve();
+        })
+    })
+    
+    geocodePromise.then(() => {
+     this.longitude = this.longitude
+     this.latitude = this.latitude
+    console.log(this.latitude)
+    })
+    return geocodePromise;
+})
 
 UserSchema.post('save', function ()  {
 this.gender = this.gender.toUpperCase();

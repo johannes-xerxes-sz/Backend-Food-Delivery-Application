@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const crypto = require('crypto');
 
 const getUsers = async (req, res, next) => {
 
