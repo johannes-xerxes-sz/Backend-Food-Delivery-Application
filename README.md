@@ -48,14 +48,9 @@ Finally, the program may include a live location feature that allows users to tr
 </kbd>
 </div>
 
-## Project Demo 
-[Click to view demo video](https://youtube.com)
-
-## Project Postman Documentation 
-[Click to view documentation](https://youtube.com)
 
 ## Project Video
-[Click to view demo of BugView](https://youtube.com)
+[Click to view presentation of Food Delivert](https://drive.google.com/file/d/1h7mJaxobhFTb_JZvwKcwc8ReizSyJNEP/view?usp=sharing)
 
 ## Technologies
 ### Backend Development 
