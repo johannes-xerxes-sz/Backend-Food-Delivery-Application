@@ -48,9 +48,8 @@ Finally, the program may include a live location feature that allows users to tr
 </kbd>
 </div>
 
-
 ## Project Video
-[Click to view presentation of Food Delivert](https://drive.google.com/file/d/1h7mJaxobhFTb_JZvwKcwc8ReizSyJNEP/view?usp=sharing)
+[Click to view presentation of Food Delivery](https://drive.google.com/file/d/1h7mJaxobhFTb_JZvwKcwc8ReizSyJNEP/view?usp=sharing)
 
 ## Technologies
 ### Backend Development 
